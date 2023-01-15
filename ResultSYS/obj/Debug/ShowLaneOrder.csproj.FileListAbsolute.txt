@@ -1,0 +1,21 @@
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\bin\Debug\ShowLaneOrder.exe.config
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\bin\Debug\ShowLaneOrder.exe
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\bin\Debug\ShowLaneOrder.pdb
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\obj\Debug\ShowLaneOrder.csprojAssemblyReference.cache
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\obj\Debug\ShowLaneOrder.Form1.resources
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\obj\Debug\ShowLaneOrder.Properties.Resources.resources
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\obj\Debug\ShowLaneOrder.csproj.GenerateResource.cache
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\obj\Debug\ShowLaneOrder.csproj.CoreCompileInputs.cache
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\obj\Debug\ShowLaneOrder.exe
+C:\Users\ykato\AppData\Local\Temporary Projects\ShowLaneOrder\obj\Debug\ShowLaneOrder.pdb
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\bin\Debug\ShowLaneOrder.exe.config
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\bin\Debug\ShowLaneOrder.exe
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\bin\Debug\ShowLaneOrder.pdb
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\Debug\ShowLaneOrder.Properties.Resources.resources
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\Debug\ShowLaneOrder.csproj.GenerateResource.cache
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\Debug\ShowLaneOrder.csproj.CoreCompileInputs.cache
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\Debug\ShowLaneOrder.exe
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\Debug\ShowLaneOrder.pdb
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\Debug\ShowLaneOrder.Form1.resources
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\Debug\ShowLaneOrder.Form2.resources
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\Debug\ShowLaneOrder.csprojAssemblyReference.cache

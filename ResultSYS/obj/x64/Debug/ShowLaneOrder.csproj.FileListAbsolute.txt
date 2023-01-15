@@ -1,0 +1,11 @@
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\bin\x64\Debug\ShowLaneOrder.exe.config
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\bin\x64\Debug\ShowLaneOrder.exe
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\bin\x64\Debug\ShowLaneOrder.pdb
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\x64\Debug\ShowLaneOrder.csprojAssemblyReference.cache
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\x64\Debug\ShowLaneOrder.Form1.resources
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\x64\Debug\ShowLaneOrder.Properties.Resources.resources
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\x64\Debug\ShowLaneOrder.csproj.GenerateResource.cache
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\x64\Debug\ShowLaneOrder.csproj.CoreCompileInputs.cache
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\x64\Debug\ShowLaneOrder.exe
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\x64\Debug\ShowLaneOrder.pdb
+C:\Users\ykato\source\repos\ShowLaneOrder\ShowLaneOrder\obj\x64\Debug\ShowLaneOrder.Form2.resources

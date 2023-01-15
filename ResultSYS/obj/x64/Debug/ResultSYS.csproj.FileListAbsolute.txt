@@ -1,0 +1,13 @@
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ShowLaneOrder.Properties.Resources.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ResultSYS.csproj.GenerateResource.cache
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ResultSYS.csproj.CoreCompileInputs.cache
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ResultSys.setup_file_io.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ResultSys.Form2.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\bin\x64\Debug\ResultSYS.exe.config
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\bin\x64\Debug\ResultSYS.exe
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\bin\x64\Debug\ResultSYS.pdb
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ResultSYS.exe
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ResultSYS.pdb
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ShowLaneOrder.frmsetup.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ResultSYS.csproj.AssemblyReference.cache
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Debug\ResultSYS.csproj.SuggestedBindingRedirects.cache

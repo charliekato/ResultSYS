@@ -1,0 +1,10 @@
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\bin\x64\Release\ShowLaneOrder.exe.config
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\bin\x64\Release\ShowLaneOrder.exe
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\bin\x64\Release\ShowLaneOrder.pdb
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Release\ResultSys.setup_file_io.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Release\ResultSys.Form2.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Release\ShowLaneOrder.Properties.Resources.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Release\ResultSYS.csproj.GenerateResource.cache
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Release\ResultSYS.csproj.CoreCompileInputs.cache
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Release\ShowLaneOrder.exe
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\x64\Release\ShowLaneOrder.pdb

@@ -1,0 +1,11 @@
+#Database ( mdb ) ‚ÌƒpƒX
+DBPATH>C:\Users\ykato\Dropbox\Private\…‰j‹¦‰ï\database2
+
+#ŽŸ‚ÌƒŒ[ƒX‚ð•\Ž¦‚·‚é‚Ü‚Å‚Ìinterval (ƒ~ƒŠ•b)
+INTERVAL2NEXTRACE>1000
+
+#Lap Time ‚ð•\Ž¦‚µ‚Ä‚¢‚éŽžŠÔ(ƒ~ƒŠ•b)
+LAPALIVETIME>1000
+
+#resultŠi”[—p@ws-access database
+RESULT>swmresult.accdb

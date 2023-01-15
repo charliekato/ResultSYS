@@ -1,0 +1,11 @@
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\bin\Release\ShowLaneOrder.exe.config
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\bin\Release\ShowLaneOrder.exe
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\bin\Release\ShowLaneOrder.pdb
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\Release\ResultSys.setup_file_io.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\Release\ResultSys.Form2.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\Release\ShowLaneOrder.Properties.Resources.resources
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\Release\ResultSYS.csproj.GenerateResource.cache
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\Release\ResultSYS.csproj.CoreCompileInputs.cache
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\Release\ShowLaneOrder.exe
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\Release\ShowLaneOrder.pdb
+C:\Users\ykato\source\repos\ResultSYS\ResultSYS\obj\Release\ResultSYS.csprojAssemblyReference.cache
