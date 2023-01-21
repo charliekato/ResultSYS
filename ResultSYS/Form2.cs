@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.IO.Ports;
 using System.Text;
 using System.Threading;
@@ -22,6 +23,8 @@ namespace ResultSys
         private int[] prgNofromLane = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         private int[] kumifromLane = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         private string[] namefromLane = new string[10] { "", "", "", "", "", "", "", "", "", "" };
+
+        
 
 
 
@@ -116,6 +119,7 @@ namespace ResultSys
             maxLaneNo = event_db.get_max_lane_number();
 
 
+            setup_file_io.writeLog("Form2 started.");
 
             init_form2();
 
@@ -412,11 +416,11 @@ namespace ResultSys
             }
 
         }
-        private void disable_monitor()
-        {
-            lblPortNo.Visible = false;
-            cmbBox.Visible = false;
-        }
+//        private void disable_monitor()
+//        {
+//            lblPortNo.Visible = false;
+//            cmbBox.Visible = false;
+//        }
         private void init_form2()
         {
             const int outerMarginX = 0;
@@ -671,14 +675,14 @@ namespace ResultSys
 
             return "" + n;
         }
-        private void write_time(string goalTime, int laneNo)
+        private void write_time(string goalTime, int laneNo,ushort orderOfArrival)
         {
             if (relayFlag)
             {
-                Controls["lblTime4Relay" + laneNo].Text = goalTime + "  Goal";
+                Controls["lblTime4Relay" + laneNo].Text = goalTime + "  " + orderOfArrival;
             } else
             {
-                Controls["lblTime" + laneNo].Text = goalTime + "  Goal";
+                Controls["lblTime" + laneNo].Text = goalTime + "  " + orderOfArrival;
             }
 
         }
@@ -859,6 +863,8 @@ namespace ResultSys
                     if (timeint==0)
                     {
                         // do nothing so far...
+                        setup_file_io.writeLog("line868: reset comes.");
+                        
                     }
                     else
                     {
@@ -869,9 +875,9 @@ namespace ResultSys
                         int intDistance = lapCounter[laneNo] * lapinterval;
                         distance = "" +intDistance + "m";
                         ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo, mytime, distance);
-                        if (goal==1)
+                        if (goal>=1)
                         { 
-                            write_time(mytime, laneNo);
+                            write_time(mytime, laneNo, orderOfArrival: (ushort) goal);
                             lane_monitor.Set_goal(laneNo);
                             ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo,mytime);
                             lapCounter[laneNo] = 0;
@@ -1192,12 +1198,19 @@ namespace ResultSys
                             }
                             if (is_goal(charbyte))
                             {
+                                int orderOfArrival;
                                 laneNo = charbyte[2] - 48;
+                                orderOfArrival = charbyte[3] - '0';
+                                if ((orderOfArrival <= 0) || (orderOfArrival >=11)) {
+                                    orderOfArrival = 1;
+                                    setup_file_io.writeLog("Invalid order of arrival.");
+                                    
+                                }
 
                                 mytime = Encoding.ASCII.GetString(charbyte, 5, 8);
                                 if ((mytime != mytimePrev) || (laneNo != laneNoPrev))
                                 {
-                                    tmd.push(misc.timestr2int(mytime), laneNo, 1);
+                                    tmd.push(misc.timestr2int(mytime), laneNo, orderOfArrival);
                                 }
                                 mytimePrev = mytime;
                                 laneNoPrev = laneNo;
@@ -1209,7 +1222,7 @@ namespace ResultSys
                             //Console.Write("{0} ,{1}", buffer[j], Encoding.ASCII.GetString(buffer, j,1));
                             if (counter > 16)
                             {
-                                Console.WriteLine("error counter reaches 17.");
+                                setup_file_io.writeLog("error counter reaches 17.");
                                 counter = -1;
                             }
                         }
@@ -1282,13 +1295,13 @@ namespace ResultSys
     public  class timeData
     {
         Queue<int> dataFifo = new Queue<int>();
-        private static int timeDataEncode(int timeint, int laneNo, int goalFlag)
+        private static int timeDataEncode(int timeint, int laneNo, int orderOfArrival)
         {
-            return laneNo * 1000000 + (goalFlag * 10000000) + timeint;
+            return laneNo * 1000000 + (orderOfArrival * 10000000) + timeint;
         }
-        private static void timeDataDecode(int timedata, ref int timeint, ref int laneNo, ref int goalFlag)
+        private static void timeDataDecode(int timedata, ref int timeint, ref int laneNo, ref int goalRank)
         {
-            goalFlag = timedata / 10000000;
+            goalRank = timedata / 10000000;
             laneNo = (timedata % 10000000) / 1000000;
             timeint = timedata % 1000000;
         }
@@ -1296,15 +1309,15 @@ namespace ResultSys
         {
             dataFifo.Enqueue(0);
         }
-        public void push(int timeint, int laneNo, int goalFlag)
+        public void push(int timeint, int laneNo, int orderOfArrival)
         {
-            dataFifo.Enqueue(timeDataEncode(timeint, laneNo, goalFlag));
+            dataFifo.Enqueue(timeDataEncode(timeint, laneNo, orderOfArrival));
         }
-        public bool pop(ref int timeint, ref int laneNo, ref int goalFlag)
+        public bool pop(ref int timeint, ref int laneNo, ref int orderOfArrival)
         {
             if (dataFifo.Count>0)
             {
-                timeDataDecode(dataFifo.Dequeue(), ref timeint, ref laneNo, ref goalFlag);
+                timeDataDecode(dataFifo.Dequeue(), ref timeint, ref laneNo, ref orderOfArrival);
                 return true;
             }
             return false;

@@ -1,5 +1,7 @@
 ﻿
+using ShowLaneOrder;
 using System;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -45,7 +47,8 @@ namespace ResultSys
             InitializeComponent();
             init_size(930,780);
             set_size_of_list_box(900, 520);
-            setup_file_io.read_setup_file(ref ExcelConnection.mdbFile,ref folderName,ref interval2NextRace,ref lapAliveTime);
+            setup_file_io.read_setup_file(ref folderName, ref interval2NextRace,
+                ref lapAliveTime, ref ExcelConnection.mdbFile, ref setup_file_io.logFilePath);
             //MessageBox.Show("db path  " + folderName + " " + interval2NextRace + " " + lapAliveTime);
             ExcelConnection.delete();
             if (folderName != "")
@@ -94,16 +97,20 @@ namespace ResultSys
             string selectedString;
             string[] sep = { " " };
 
-            selectedString = lbxDbContents.SelectedItem.ToString();
-            //------------------------
-            string[] eventInfo = selectedString.Split(sep,StringSplitOptions.RemoveEmptyEntries);
-            string fullpathDBName = folderName + "\\" + eventInfo[0];
-            
-            
-             
+            if (lbxDbContents.SelectedItem==null)
+            {
+                MessageBox.Show("大会を選択してください。");
+            } else
+            {
 
-            form2 = new Form2(fullpathDBName);
-            form2.Show();
+                selectedString = lbxDbContents.SelectedItem.ToString();
+                //------------------------
+                string[] eventInfo = selectedString.Split(sep,StringSplitOptions.RemoveEmptyEntries);
+                string fullpathDBName = folderName + "\\" + eventInfo[0];
+
+                form2 = new Form2(fullpathDBName);
+                form2.Show();
+             }
         }
         private void call_showEventList()
         {
@@ -215,12 +222,35 @@ namespace ResultSys
             this.Close();
         }
 
-    }
-    public class setup_file_io
-    {
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form form3 = new frmsetup();
+            form3.Show();
+        }
 
-        
-        private const string setupFileName = "swmsys.setup.sjis.txt";
+        private void txtBxFolder_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+    public static class setup_file_io
+    {
+        private const string setupFileName = "swmsys.setup.txt";
+        public static string logFilePath;
+        public static void writeLog( string msg)
+        {
+            try
+            {
+                StreamWriter logFile = new StreamWriter(logFilePath,true);
+                DateTime dt = DateTime.Now;
+                logFile.WriteLine(dt.ToString("HH:mm:ss") + ">" + msg);
+                logFile.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
 
         public static void write_setup_file(string dbPath )
         {
@@ -230,7 +260,6 @@ namespace ResultSys
             int lastLine=0;
             try
             {
-
                 using (StreamReader reader = new StreamReader(setupFileName, System.Text.Encoding.GetEncoding("sjis")))
                 {
 
@@ -267,14 +296,27 @@ namespace ResultSys
 
         }
 
+        private static void set_default_value(ref string dbPath,ref int interval2NextRace, ref int lapAliveTime
+              ,ref string resultDbPath,ref string logFileName) {
 
-        public static void read_setup_file(ref string resultDbPath, ref string dbPath,ref int interval2NextRace, ref int lapAliveTime)
+            dbPath = @"C:\Users\ykato\Dropbox\Private\水泳協会\database2";
+            interval2NextRace = 10000;
+            lapAliveTime = 10000;
+            resultDbPath = "swmresult.accdb";
+            logFileName = "swmSys.log.txt";
+
+        }
+
+        public static void read_setup_file(ref string dbPath, ref int interval2NextRace,
+            ref int lapAliveTime,ref string resultDbPath, ref string logFileName)
         {
             try
             {
                 using (StreamReader reader = new StreamReader(setupFileName, System.Text.Encoding.GetEncoding("sjis")))
                 {
                     string line = "";
+                    set_default_value(ref dbPath, ref interval2NextRace, ref lapAliveTime,
+                        ref resultDbPath, ref logFileName);
                     while ((line = reader.ReadLine()) != null)
                     {
                         if (line == "") continue;
@@ -291,6 +333,14 @@ namespace ResultSys
                         if (words[0]=="LAPALIVETIME")
                         {
                             lapAliveTime = Int32.Parse(words[1]);
+                        }
+                        if (words[0] == "LOGFILE")
+                        {
+                            logFileName = words[1];
+                        }
+                        if (words[0] == "RESULT")
+                        {
+                            resultDbPath = words[1];
                         }
                     }
                 }
