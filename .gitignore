@@ -1,0 +1,8 @@
+.vs
+ResultSYS/bin/
+ResultSYS/obj/*
+ResultSYS/*.vsidx
+ResultSYS/timesub.cs
+ResultSYS/timesub.exe
+ResultSYS/*.new
+ResultSYS/*.bk*
