@@ -1,3 +1,4 @@
+*.merged
 bin
 obj
 *.vsidx
