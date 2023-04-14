@@ -70,9 +70,9 @@
             this.lblms1.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblms1.Location = new System.Drawing.Point(978, 105);
             this.lblms1.Name = "lblms1";
-            this.lblms1.Size = new System.Drawing.Size(58, 33);
+            this.lblms1.Size = new System.Drawing.Size(47, 33);
             this.lblms1.TabIndex = 4;
-            this.lblms1.Text = "mS";
+            this.lblms1.Text = "秒";
             // 
             // label1
             // 
@@ -80,9 +80,9 @@
             this.label1.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.label1.Location = new System.Drawing.Point(978, 188);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 33);
+            this.label1.Size = new System.Drawing.Size(47, 33);
             this.label1.TabIndex = 5;
-            this.label1.Text = "mS";
+            this.label1.Text = "秒";
             // 
             // txtboxTimetoNext
             // 

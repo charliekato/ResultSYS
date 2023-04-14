@@ -24,13 +24,17 @@ namespace ResultSys
     }
     public static class ExcelConnection
     {
-        public static string mdbFile="swmresult.accdb";
+        private static string mdbFile="swmresult.accdb";
         private const string magicWord = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=";
         //  private const string magicTail = ";Extended Properties='Excel 12.0; HDR=Yes'";
         private const string magicTail = "";
         private const string tblName = "RESULT";
         private const string prgTblName = "PROGRAM";
 
+        public static void set_mdb_file_name(string mdbFileName)
+        {
+            mdbFile = mdbFileName; 
+        }
 
         public static void delete()
         {

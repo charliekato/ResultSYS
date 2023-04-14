@@ -15,12 +15,13 @@ namespace ResultSys
     public partial class Form1 : Form
     {
         string folderName;
-        public static int interval2NextRace;
-        public static int lapAliveTime;
-        public const int NUMSTYLE = 7;
-        public const int NUMDISTANCE = 7;
+        private static int interval2NextRace;
+        private static int lapAliveTime;
 
-        public const int TIME4DNS = 999999;
+        private const int NUMSTYLE = 7;
+        private const int NUMDISTANCE = 7;
+
+        private const int TIME4DNS = 999999;
         public const int TIME4DQ = 999998;
         public const int DNS = 1;
         public const int DQ = 2;
@@ -29,9 +30,9 @@ namespace ResultSys
         static Encoding shiftjisEnc = Encoding.GetEncoding("Shift-JIS");
         public bool StopAutoRun;
         // related 大会設定
-        public string EventName;
-        public string EventDate;
-        public string EventVenue;
+//        private string EventName;
+//        private string EventDate;
+//        private string EventVenue;
 
         
         static public string[] Team = new string[100];
@@ -42,15 +43,23 @@ namespace ResultSys
         static public string[] TeamName4Relay;
         static public Form2 form2;
 
+        public static int get_lap_alive_time() { return lapAliveTime; }
+        public static void set_lap_alive_time(int newLapAliveTime) { lapAliveTime = newLapAliveTime; }
+        public static int get_interval_2_next_race() { return interval2NextRace; }
+        public static void set_interval_2_next_race(int newInterval2NextRace) {  interval2NextRace = newInterval2NextRace; }
         public Form1()
         {
+            string mdbFileName="";
+            string cmdFileName="";
             InitializeComponent();
             init_size(930,780);
             set_size_of_list_box(900, 520);
-            setup_file_io.read_setup_file(ref folderName, ref interval2NextRace,
-                ref lapAliveTime, ref ExcelConnection.mdbFile, ref setup_file_io.logFilePath);
+            setupFileIo.read_setup_file(ref folderName, ref interval2NextRace,
+                ref lapAliveTime, ref mdbFileName, ref setupFileIo.logFilePath, ref cmdFileName) ;
+            ExcelConnection.set_mdb_file_name(mdbFileName)  ;
+            cmdFileIo.set_cmd_file(cmdFileName);
             //MessageBox.Show("db path  " + folderName + " " + interval2NextRace + " " + lapAliveTime);
-            ExcelConnection.delete();
+            //ExcelConnection.delete();
             if (folderName != "")
             {
                 
@@ -129,14 +138,14 @@ namespace ResultSys
             
             FolderBrowserDialog dbPickDialog = new FolderBrowserDialog();
             dbPickDialog.Description = "データベースパスの選択";
-            dbPickDialog.RootFolder = Environment.SpecialFolder.UserProfile;
+    //        dbPickDialog.RootFolder = Environment.SpecialFolder.UserProfile;
             dbPickDialog.SelectedPath = folderName;
             DialogResult result = dbPickDialog.ShowDialog();
             if (result==DialogResult.OK)
             {
                 folderName = dbPickDialog.SelectedPath;
                 txtBxFolder.Text = folderName;
-                setup_file_io.write_setup_file(folderName);
+//                setupFileIo.write_setup_file(folderName);
                 call_showEventList();
                 
             }
@@ -232,10 +241,15 @@ namespace ResultSys
         {
 
         }
+
+        private void btnInitDB_Click(object sender, EventArgs e)
+        {
+            ExcelConnection.delete();
+        }
     }
-    public static class setup_file_io
+    public static class setupFileIo
     {
-        private const string setupFileName = "swmsys.setup.txt";
+        private const string setupFileName = "ResultMonitor.ini";
         public static string logFilePath;
         public static void writeLog( string msg)
         {
@@ -296,29 +310,15 @@ namespace ResultSys
 
         }
 
-        private static void set_default_value(ref string dbPath,ref int interval2NextRace, ref int lapAliveTime
-              ,ref string resultDbPath,ref string logFileName) {
-
-            dbPath = @"C:\Users\ykato\Dropbox\Private\水泳協会\database2";
-            interval2NextRace = 10000;
-            lapAliveTime = 10000;
-            resultDbPath = "swmresult.accdb";
-            logFileName = "swmSys.log.txt";
-
-        }
-
         public static void read_setup_file(ref string dbPath, ref int interval2NextRace,
-            ref int lapAliveTime,ref string resultDbPath, ref string logFileName)
+            ref int lapAliveTime,ref string resultDbPath, ref string logFileName, ref string cmdFile)
         {
             try
             {
                 using (StreamReader reader = new StreamReader(setupFileName, System.Text.Encoding.GetEncoding("sjis")))
                 {
-                    string line = "";
-//                    set_default_value(ref dbPath, ref interval2NextRace, ref lapAliveTime,
- //                       ref resultDbPath, ref logFileName);
-                    while ((line = reader.ReadLine()) != null)
-                    {
+                     string line = "";
+                    while ((line = reader.ReadLine()) != null) { 
                         if (line == "") continue;
                         if (line.Substring(0, 1) == "#") continue;
                         string[] words = line.Split('>');
@@ -342,11 +342,20 @@ namespace ResultSys
                         {
                             resultDbPath = words[1];
                         }
+                        if (words[0] == "CMDFILE")
+                        {
+                            cmdFile = words[1];
+                            if (! File.Exists(cmdFile))
+                            {
+                                MessageBox.Show("Command File not found. Check if " + cmdFile + " exists");
+                            }
+                        }
                     }
                 }
             } catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+                MessageBox.Show("Maybe " + setupFileName + " does not exist.");
             }
 
         }

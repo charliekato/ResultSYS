@@ -16,14 +16,14 @@ namespace ShowLaneOrder
         public frmsetup()
         {
             InitializeComponent();
-            txtboxTimetoNext.Text = Form1.interval2NextRace.ToString();
-            txtboxTimetoErase.Text = Form1.lapAliveTime.ToString();
+            txtboxTimetoNext.Text = Form1.get_interval_2_next_race().ToString();
+            txtboxTimetoErase.Text = Form1.get_interval_2_next_race().ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Form1.interval2NextRace =Int32.Parse( txtboxTimetoNext.Text);
-            Form1.lapAliveTime =  Int32.Parse(txtboxTimetoErase.Text) ;
+            Form1.set_interval_2_next_race( Int32.Parse( txtboxTimetoNext.Text));
+            Form1.set_lap_alive_time( Int32.Parse(txtboxTimetoErase.Text) );
             this.Close();
         }
     }

@@ -39,12 +39,13 @@
             this.btnQuit = new System.Windows.Forms.Button();
             this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
             this.btnSetup = new System.Windows.Forms.Button();
+            this.btnInitDB = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnShowLaneOrder
             // 
             this.btnShowLaneOrder.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnShowLaneOrder.Location = new System.Drawing.Point(1067, 191);
+            this.btnShowLaneOrder.Location = new System.Drawing.Point(983, 191);
             this.btnShowLaneOrder.Name = "btnShowLaneOrder";
             this.btnShowLaneOrder.Size = new System.Drawing.Size(236, 76);
             this.btnShowLaneOrder.TabIndex = 0;
@@ -121,11 +122,23 @@
             this.btnSetup.UseVisualStyleBackColor = true;
             this.btnSetup.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnInitDB
+            // 
+            this.btnInitDB.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnInitDB.Location = new System.Drawing.Point(1515, 196);
+            this.btnInitDB.Name = "btnInitDB";
+            this.btnInitDB.Size = new System.Drawing.Size(156, 66);
+            this.btnInitDB.TabIndex = 10;
+            this.btnInitDB.Text = "InitDB";
+            this.btnInitDB.UseVisualStyleBackColor = true;
+            this.btnInitDB.Click += new System.EventHandler(this.btnInitDB_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1965, 1062);
+            this.Controls.Add(this.btnInitDB);
             this.Controls.Add(this.btnSetup);
             this.Controls.Add(this.btnQuit);
             this.Controls.Add(this.lbxDbContents);
@@ -153,6 +166,7 @@
         private System.Windows.Forms.Button btnQuit;
         private System.Windows.Forms.ToolTip toolTip2;
         private System.Windows.Forms.Button btnSetup;
+        private System.Windows.Forms.Button btnInitDB;
     }
 }
 

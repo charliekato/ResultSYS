@@ -476,6 +476,7 @@ namespace ResultSys
         static string[] distancebyUID;
 
 
+        static string currentConnectionString;
 
         static int[] ShumokubyUID;
         static int[] raceNobyUID;
@@ -496,6 +497,113 @@ namespace ResultSys
         readonly static string[] GenderStr = new string[3] { "男子", "女子", "混合" };
         public static int get_max_program_no() { return maxProgramNo; }
 
+        public int Get_max_laneNo()
+        {
+            int maxLaneNo;
+            int maxLaneNo4tf;
+            int maxLaneNo4f;
+            OleDbConnection conn = new OleDbConnection(currentConnectionString);
+            using (conn)
+            {
+                String sql = "SELECT 使用水路予選, 使用水路タイム決勝, 使用水路決勝 FROM 大会設定 ;";
+                OleDbCommand comm = new OleDbCommand(sql, conn);
+                conn.Open();
+                using (OleDbDataReader dr = comm.ExecuteReader())
+                {
+                    dr.Read();
+                    maxLaneNo = misc.if_not_null(dr["使用水路予選"]);
+                    maxLaneNo4tf = misc.if_not_null(dr["使用水路タイム決勝"]);
+                    maxLaneNo4f = misc.if_not_null(dr["使用水路決勝"]);
+                    if (maxLaneNo < maxLaneNo4tf) maxLaneNo = maxLaneNo4tf;
+                    if (maxLaneNo < maxLaneNo4f) maxLaneNo = maxLaneNo4f;
+                }
+            }
+            return maxLaneNo;
+        }
+        public bool get_next_race(ref int prgNo, ref int kumi)
+        {
+
+            if (prgNo == 0)
+            {
+                prgNo = 1;
+                kumi = 1;
+                return true;
+            }
+            int maxKumi = Get_max_kumi(prgNo);
+            if (kumi == maxKumi)
+            {
+                int maxPrgNo = get_max_program_no();
+                if (maxPrgNo == prgNo) return false;
+                prgNo++;
+                kumi = 1;
+                return true;
+            }
+
+            kumi++;
+            return true;
+        }
+
+        public int get_swimmer_id(int prgNo, int kumi, int laneNo)
+        {
+            int swimmerID = 0;
+
+
+            int uid = program_db.get_uid_from_prgno(prgNo);
+            OleDbConnection conn = new OleDbConnection(currentConnectionString);
+            using (conn)
+            {
+                String sql = "SELECT UID, 選手番号, 組, 水路, ラップ１, ラップ２, ラップ３,事由入力ステータス " +
+                                    "FROM 記録マスター WHERE 組=" + kumi + " AND UID=" + uid +
+                                    " AND 水路=" + laneNo + ";";
+                OleDbCommand comm = new OleDbCommand(sql, conn);
+                conn.Open();
+                using (OleDbDataReader dr = comm.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        swimmerID = misc.if_not_null(dr["選手番号"]);
+                    }
+                }
+            }
+            return swimmerID;
+
+        }
+        private int Get_first_occupied_lane(int prgNo, int kumi)
+        {
+            int laneNo;
+            for (laneNo = 1; laneNo <= Get_max_laneNo(); laneNo++)
+            {
+                if (get_swimmer_id(prgNo, kumi, laneNo) > 0) return laneNo;
+            }
+            return 0;
+        }
+        private int Get_last_occupied_lane(int prgNo, int kumi)
+        {
+            int laneNo;
+            int lastOccupiedLane = 0;
+            for (laneNo = 1; laneNo <= Get_max_laneNo(); laneNo++)
+            {
+                if (get_swimmer_id(prgNo, kumi, laneNo) > 0) lastOccupiedLane = laneNo;
+            }
+            return lastOccupiedLane;
+        }
+        public int can_go_with_next(ref int prgNo, ref int kumi)
+        /* if true, returns firstLaneNo of the next race */
+        {
+            int nextPrgNo = prgNo;
+            int nextKumi = kumi;
+            int firstLaneNo;
+            get_next_race(ref nextPrgNo, ref nextKumi);
+            firstLaneNo = Get_first_occupied_lane(nextPrgNo, nextKumi);
+            if (Get_last_occupied_lane(prgNo, kumi) < firstLaneNo)
+            {
+                prgNo = nextPrgNo; kumi = nextKumi;
+                return firstLaneNo;
+            }
+            return 0;
+
+
+        }
         public static int get_next_uid(int uid)
         {
             int prgNo = get_race_number_from_uid(uid);
@@ -609,6 +717,7 @@ namespace ResultSys
         public program_db(String connectionString)
         {
 
+            currentConnectionString= connectionString;
             OleDbConnection conn = new OleDbConnection(connectionString);
             init_program_db_array(conn);
             conn = new OleDbConnection(connectionString);
@@ -681,6 +790,26 @@ namespace ResultSys
             int uid = get_uid_from_prgno(prgNo);
             return get_distance_from_uid(uid);
         }
+        public static int Get_max_kumi(int prgNo)
+        {
+
+            int maxKumi;
+            int uid = program_db.get_uid_from_prgno(prgNo);
+            OleDbConnection conn = new OleDbConnection(currentConnectionString);
+            using (conn)
+            {
+                String sql = "SELECT  MAX(組) AS maxkumi FROM 記録マスター WHERE UID=" + uid + ";";
+                OleDbCommand comm = new OleDbCommand(sql, conn);
+                conn.Open();
+                using (OleDbDataReader dr = comm.ExecuteReader())
+                {
+                    dr.Read();
+                    maxKumi = Convert.ToInt32(dr["maxkumi"]);
+                }
+            }
+            return maxKumi;
+        }
+ 
         public void read_program_db_(OleDbConnection conn)
         {
 
@@ -710,6 +839,7 @@ namespace ResultSys
                         classNumberbyUID[uid] = Convert.ToInt32(dr["クラス番号"]);
                     }
                 }
+
             }
            
         }

@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.OleDb;
+using System.Xml.Schema;
+
 namespace ResultSys
 {
 
@@ -26,9 +28,11 @@ namespace ResultSys
         //private string[] namefromLane = new string[10] { "", "", "", "", "", "", "", "", "", "" };
 
         
-        private int[] lastLapTime = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        private int[,] lapTime = new int[10,30] ;
         private int[] arrivalOrder = new int[10] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+        private int[] goalTimeArray = new int[10] { 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, };
 
+        private string[] reasonString = new string[7] { "", "棄権", "失格", "途中棄権", "OPEN", "OP(失格)", "OP(棄権)" };
 
 
 
@@ -106,7 +110,6 @@ namespace ResultSys
         }
 
 
-
         public Form2(string filename)
         {
             InitializeComponent();
@@ -123,7 +126,7 @@ namespace ResultSys
             maxLaneNo = event_db.get_max_lane_number();
 
 
-            setup_file_io.writeLog("Form2 started.");
+            setupFileIo.writeLog("Form2 started.");
 
             init_form2();
 
@@ -198,8 +201,8 @@ namespace ResultSys
         private void layout_label()
         {
 
-            const int STDWIDTH = 1200;
-            const int STDHEIGHT = 800;
+            const int STDWIDTH = 1200; //was 1200
+            const int STDHEIGHT = 800; //was 800
             int topMargin = this.Height / 12;  // 88
 
             int buttomMargin = this.Height / 15; //53
@@ -215,10 +218,11 @@ namespace ResultSys
             int raceNameHeight = 14*Height/STDHEIGHT; // laneHeight * 3 / 10;
             //      laneHeight = 100;
             int fontSize = 30*this.Width/STDWIDTH; // was  30
+            int aoWidth = 25 * this.Width / STDWIDTH;
             //int fontSizeKana = 12*Width/STDWIDTH;
-            int timeWidth = fontSize * 5;
+            int timeWidth = 140 * this.Width / STDWIDTH;
             int fontSize4Rly = 16*Width/STDWIDTH;
-            int fontSizeShozoku = 22*Width/STDWIDTH;
+            int fontSizeShozoku = 21*Width/STDWIDTH;
             int fontsize4relayTeam = 24*Width/STDWIDTH;
             int fontsize4RaceName = 17 * Width / STDWIDTH;
             const string fontName = "MS UI Gothic";
@@ -229,11 +233,14 @@ namespace ResultSys
             Font raceNameFont = new Font(fontName, fontsize4RaceName);
             Font smallNameFont = new Font(fontName, fontSize4Rly);
             int halfLaneHeight = fontSize + 4;  // was laneHeight/2
+            int relaySwimmerNameHeight=18*Width/STDWIDTH;
+            int shozokuNameHeight = 21 * Width / STDWIDTH;
 
             int laneNo;
 
             for (laneNo = 1; laneNo <= maxLaneNo; laneNo++)
             {
+                
                 int xpos = leftMargin;
                 int yposr = topMargin + (laneHeight * (laneNo - 1))+2;
                 int yposk = yposr + raceNameHeight;
@@ -246,25 +253,25 @@ namespace ResultSys
                 //create_lblName("lblKana", laneNo, xpos + 15, yposk, kanaFont, "");
                 xpos += nameWidth;
                 create_lblName("lblShozoku", laneNo, xpos, ypos + 3, shozokuFont, "");
-                int xpos4relay = xpos - 5;
+                int xpos4relay = xpos - 8; ////------
                 xpos += nameWidth;
-                create_lblName("lblArrivalOrder", laneNo, xpos,ypos, nameFont, "");
                 xpos += fontSize * 2;
-                create_lblName("lblTime", laneNo, xpos, ypos, nameFont, "");
-                create_lblName("lblLapTime", laneNo, xpos-(fontSize/2), ypos + halfLaneHeight, nameFont, "");//2023/03/07
-                create_lblName("lblNewRecord", laneNo, xpos + timeWidth, ypos, nameFont, "");
-                for (int j = 1; j < 5; j++)
+                for (int swimmerOder = 1; swimmerOder < 5; swimmerOder++)
                 {
-                    create_lblName("lblRelaySwimmer" + j, laneNo, xpos4relay, ypos + 5, smallNameFont, "");
-                    //create_lblName("lblRelaySwimmerKana" + j, laneNo, xpos4relay, yposk + 5, kanaFont, "");
+                    int myypos1 = ypos + shozokuNameHeight+9; //-----
+                    int myypos2 = myypos1 + shozokuNameHeight;
+                    create_lblName("lblRelaySwimmer" + swimmerOder, laneNo, xpos4relay, ypos + 2, smallNameFont, "");
+                    //create_lblName("lblRelaySwimmerKana" + swimmerOder, laneNo, xpos4relay, yposk + 5, kanaFont, "");
+                    create_lblName("lblLapTime_"  + swimmerOder + "_", laneNo, xpos4relay, myypos1 ,smallNameFont);
+                    create_lblName("lblLapTimekk_"  + swimmerOder + "_", laneNo, xpos4relay, myypos2 ,smallNameFont);
                     xpos4relay += relaySwimmerWidth;
                 }
 
-                create_lblName("lblArrivalOrder4Relay", laneNo, xpos4relay, ypos, nameFont, "");
-                xpos4relay += fontSize * 2;
-                create_lblName("lblTime4Relay", laneNo, xpos4relay, ypos, nameFont, "");
-                create_lblName("lblLapTime4Relay", laneNo, xpos4relay-(fontSize/2), ypos+halfLaneHeight, nameFont, "");//2023/03/07
-                create_lblName("lblNewRecord4Relay", laneNo, xpos4relay+timeWidth, ypos, nameFont, "");
+                create_lblName("lblArrivalOrder", laneNo, xpos4relay, ypos, nameFont, "");
+                xpos4relay += aoWidth;
+                create_lblName("lblTime", laneNo, xpos4relay, ypos, nameFont, "");
+                create_lblName("lblLapTime", laneNo, xpos4relay-(fontSize/2), ypos+halfLaneHeight, nameFont, "");//2023/03/07
+                create_lblName("lblNewRecord", laneNo, xpos4relay+timeWidth, ypos, nameFont, "");
 
             }
 
@@ -336,8 +343,8 @@ namespace ResultSys
                 occupied[laneNo] = 1;
                 return;
             }
-            if (reason_code == 1) Controls["lblTime4Relay" + laneNo].Text = " 棄権";
-            if (reason_code == 2) Controls["lblTime4Relay" + laneNo].Text = " 失格";
+            if (reason_code == 1) Controls["lblTime" + laneNo].Text = " 棄権";
+            if (reason_code == 2) Controls["lblTime" + laneNo].Text = " 失格";
         }
         private string get_race_name(int uid)
         {
@@ -479,7 +486,6 @@ namespace ResultSys
             int maxPrgNo = program_db.get_max_program_no();
 
             init_array(occupied);
-            init_array(lastLapTime);
             prgNo = get_program_number();
             kumi = get_kumi_number();
             if (prgNo > maxPrgNo)
@@ -523,12 +529,13 @@ namespace ResultSys
                 Controls["lblName" + lane].Text = "";
                 Controls["lblShozoku" + lane].Text = "";
                 //Controls["lblKana" + lane].Text = "";
-                for (int j = 1; j < 5; j++)
+                for (int swimOrder = 1; swimOrder < 5; swimOrder++)
                 {
-                    Controls["lblRelaySwimmer" + j + lane].Text = "";
-                    //Controls["lblRelaySwimmerKana" + j + lane].Text = "";
+                    Controls["lblLapTime_" + swimOrder + "_" + lane].Text = "";
+                    Controls["lblLapTimekk_" + swimOrder + "_" + lane].Text = "";
+                    Controls["lblRelaySwimmer" + swimOrder + lane].Text = "";
+                    //Controls["lblRelaySwimmerKana" + swimOrder + lane].Text = "";
                 }
-                Controls["lblNewRecord4Relay" + lane].Text = "";
                 Controls["lblNewRecord" + lane].Text = "";
             }
         }
@@ -594,14 +601,13 @@ namespace ResultSys
                                     ExcelConnection.append( prgNo, kumi, laneNo, tmDB.get_name(swimmerID[laneNo]));
                                     show_relay_team(laneNo, swimmerID[laneNo], misc.if_not_null(dr["第１泳者"]),
                                       misc.if_not_null(dr["第２泳者"]), misc.if_not_null(dr["第３泳者"]), misc.if_not_null(dr["第４泳者"]));
-                                    show_reason4Relay_and_set_occupied(laneNo, Convert.ToInt32(dr["事由入力ステータス"]));
                                 } else
                                 {
                                     relayFlag = false;
                                     show_swimmer_name(laneNo, swimmerID[laneNo]);
                                     ExcelConnection.append( prgNo, kumi, laneNo, swmDB.get_name(swimmerID[laneNo]));
-                                    show_reason_and_set_occupied(laneNo, Convert.ToInt32(dr["事由入力ステータス"]));
                                 }
+                                show_reason_and_set_occupied(laneNo, Convert.ToInt32(dr["事由入力ステータス"]));
                                 lastOccupiedLane = laneNo;
                             }
                         }
@@ -690,51 +696,118 @@ namespace ResultSys
 
             return "" + n;
         }
-        private void write_time(string goalTime, int laneNo,ushort orderOfArrival)
+
+        private void lap_case1(int laneNo,int lapCount, int intTime, int[,] lapTime)
         {
-            if (relayFlag)
+            if (lapCount == 2)
             {
-                Controls["lblTime4Relay" + laneNo].Text = goalTime + "  Fin";
-                Controls["lblArrivalOrder4Relay" + laneNo].Text = "" + orderOfArrival;
-            } else
+                Controls["lblLapTime_4_" + laneNo].Text = misc.timeint2str(intTime);
+                Controls["lblLapTimekk_4_" + laneNo].Text = "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, 1]))+")";
+            }
+            else
             {
-                Controls["lblArrivalOrder" + laneNo].Text = ""+orderOfArrival;
-                Controls["lblTime" + laneNo].Text = goalTime + "  Fin";
+                Controls["lblLapTime_2_" + laneNo].Text = misc.timeint2str(intTime);
             }
 
         }
-        
-        private void write_time(string goalTime, int laneNo, int distance)
+        private void lap_case2(int laneNo,int lapCount,int intTime, int[,] lapTime)
         {
-            if (relayFlag)
+            if (lapCount>1)
             {
-                Controls["lblTime4Relay" + laneNo].Text = goalTime + "  " + distance + "m";
+                Controls["lblLapTime_" + lapCount + "_" + laneNo].Text = misc.timeint2str(intTime);
+                Controls["lblLapTimekk_"+ lapCount+ "_"+laneNo].Text = 
+                   "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, lapCount-1]) )+")";
             } else
             {
-                Controls["lblTime" + laneNo].Text = goalTime + "  " + distance + "m";
+                Controls["lblLapTime_" +lapCount+"_"+ laneNo].Text = misc.timeint2str(intTime);
             }
-            enable_timer(laneNo);
+        }
+        private void lap_case3(int laneNo,int lapCount,int intTime, int[,] lapTime)
+        {
+
+            if ((lapCount % 2) == 1) return;
+            int bylapCount = lapCount >> 1;
+            if (bylapCount>1)
+            {
+                Controls["lblLapTime_" + bylapCount + "_" + laneNo].Text = misc.timeint2str(intTime);
+                Controls["lblLapTimekk_"+ bylapCount+ "_"+laneNo].Text = 
+                   "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, lapCount-1]) )+")";
+            } else
+            {
+                Controls["lblLapTime_" +bylapCount+"_"+ laneNo].Text = misc.timeint2str(intTime);
+            }
+        }
+        private void lap_case4(int laneNo, int lapCount, int intTime, int[,] lapTime)
+        {
+            if (lapCount > 4)
+            {
+                int lc;
+                for (lc = 1; lc < 4; lc++)
+                {
+                    int lcp1 = lc + 1;
+                    Controls["lblLap_Time_" + lc + "_" + laneNo].Text = Controls["lblLap_Time_" + lcp1 + "_" + laneNo].Text;
+                    Controls["lblLap_Timekk_" + lc + "_" + laneNo].Text = Controls["lblLap_Timekk_" + lcp1 + "_" + laneNo].Text;
+
+                }
+                Controls["lblLap_Time_4_" + laneNo].Text = misc.timeint2str(intTime);
+                Controls["lblLap_Timekk_4_" + laneNo].Text =
+                   "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, lapCount - 1])) + ")";
+            }
+            else lap_case2(laneNo, lapCount, intTime, lapTime);
+
+        }
+
+
+        private void write_lap_2(int laneNo, int intTime,int thisDistance, int goalDistance, int[,] lapTime, int lapCount, int lapInterval)
+        {
+            if (goalDistance <= 50) return;
+            if (goalDistance==100)
+            {
+                if (lapInterval == 100) return;
+                lap_case1(laneNo, lapCount, intTime, lapTime);
+            }
+            else if (goalDistance==200)
+            {
+                if (lapInterval == 100)
+                {
+                    lap_case1(laneNo,lapCount, intTime, lapTime);
+                } else
+                lap_case2(laneNo,lapCount,intTime,lapTime);
+            }
+            else if (goalDistance==400)
+            {
+                if (lapInterval == 100) lap_case2(laneNo, lapCount, intTime, lapTime);
+                if (lapInterval == 50) lap_case3(laneNo,lapCount,intTime,lapTime);
+            }
+            else
+            {
+                lap_case4(laneNo,lapCount,intTime,lapTime);
+            }
+
+        }
+        private void write_time(string goalTime, int laneNo,ushort orderOfArrival,string distance,bool fin=false)
+        {
+            if (fin)
+                Controls["lblTime" + laneNo].Text = goalTime + "  Fin";
+            else
+            {
+                Controls["lblTime" + laneNo].Text = goalTime + "  " + distance ;
+                enable_timer(laneNo);
+            }
+
+            Controls["lblArrivalOrder" + laneNo].Text = "" + orderOfArrival;
+
         }
         private void write_lap(int laptime,int laneNo)
         {
-            if (relayFlag)
-            {
-                Controls["lblLapTime4Relay" + laneNo].Text = "(" +
-                    misc.timeint2str(laptime) + ")";
-            } else
-            {
-                Controls["lblLapTime"+laneNo].Text = "("+
-                    misc.timeint2str(laptime)+ ")";
-            }
+            Controls["lblLapTime" + laneNo].Text = "(" +
+                misc.timeint2str(laptime) + ")";
         }
         private void clear_time(int laneNo)
         {
             Controls["lblTime" + laneNo].Text = "";
-            Controls["lblTime4Relay" + laneNo].Text = "";
             Controls["lblLapTime" + laneNo].Text = "";
-            Controls["lblLapTime4Relay" + laneNo].Text = "";
             Controls["lblArrivalOrder" + laneNo].Text = "";
-            Controls["lblArrivalOrder4Relay" + laneNo].Text = "";
         }
         private void erase_lane0(object s, EventArgs e)
         {
@@ -850,12 +923,12 @@ namespace ResultSys
             }
         }
 
-        private void init_array(int[] array)
+        private void init_array(int[] array, int value=0)
         {
             int ix;
             for (ix = 0; ix < 10; ix++)
             {
-                array[ix] = 0;
+                array[ix] = value;
             }
         }
         private bool is_race_comp()
@@ -878,72 +951,102 @@ namespace ResultSys
 
         }
 
-        private int calculate_arrival_order(int timeint)
+        private int get_distance_from_lane(int laneNo)
         {
-            int laneNo;
-            for (laneNo = 1;laneNo<=maxLaneNo; laneNo++)
-            {
-                //
-            }
-            return 0;
+            int uid = uidFromLane[laneNo];
+            string distance = program_db.get_distance_from_uid(uid);
+            if (distance == null) return 0;
+            int strlen = distance.Length;
+            return Convert.ToInt32(distance.Substring(0, strlen-1));
+
         }
         public async void serial_read()
         {
-            int timeint = 111111;
+            int prgNo=1;
+            int kumi=1;
+            int prevPrgNo = 0;
+            int prevKumi = 0;
+            bool resultFlag=false;
+            int intTime = 111111;
             int laneNo = 0;
-            int goal = 0;
-            int arrivalOrder;
-            int lapinterval = evtDB.Get_lap_interval();
+            int arrivalOrder = 0;
+            int lapInterval = evtDB.Get_lap_interval();
+            bool goalFlagNotUsed=false;
+            bool goalFlag; //determined by distance
             tmd = serial_interface.tmd;
 
             while (true)
             {
                 if (!monitorEnable) break;
                 bool rc;
-                rc = tmd.pop(ref timeint, ref laneNo, ref goal);
+                rc = tmd.pop(ref intTime, ref laneNo, ref arrivalOrder,ref goalFlagNotUsed);
                 if (rc)
                 {
-                    if (timeint==0)
+                    if (intTime==0)
                     {
-                        // do nothing so far...
-                        setup_file_io.writeLog("line868: reset comes.");
-                        
+                        setupFileIo.writeLog("line868: reset comes.");
+                        // actually never happens
                     }
                     else
                     {
                         lapCounter[laneNo]++;
-                        string mytime = misc.timeint2str(timeint);
+                        string mytime = misc.timeint2str(intTime);
                         
                         string distance;
-                        int intDistance = lapCounter[laneNo] * lapinterval;
-                        distance = "" +intDistance + "m";
-                        ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo, mytime, distance);
-                        arrivalOrder=calculate_arrival_order(timeint);
-                        if (goal>=1)
-                        { 
-                            write_time(mytime, laneNo, orderOfArrival: (ushort) goal);
-                            if (lastLapTime[laneNo]>0)
-                            {
-                                write_lap(misc.substract_time(timeint, lastLapTime[laneNo]),laneNo);
-                            }
-                            lane_monitor.Set_goal(laneNo);
-                            ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo,mytime);
-                            lapCounter[laneNo] = 0;
-                        } else
+                        int intDistance = lapCounter[laneNo] * lapInterval;
+                        int goalDistance = get_distance_from_lane(laneNo);
+                        if (goalDistance>0)
                         {
-                            write_time(mytime, laneNo, lapCounter[laneNo] * lapinterval);
-                        }
 
-                        lastLapTime[laneNo] = timeint;
+                            distance = "" +intDistance + "m";
+                            goalFlag = (intDistance == goalDistance);
+                            ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo, mytime, distance);
+                            write_time(mytime, laneNo,  (ushort) arrivalOrder,distance,goalFlag);
+                            write_lap_2(laneNo, intTime, intDistance, goalDistance, lapTime, lapCounter[laneNo],lapInterval);
+                            if (lapCounter[laneNo]>1)
+                            {
+                                write_lap(misc.substract_time(intTime, lapTime[laneNo,lapCounter[laneNo]-1]),laneNo);
+                            }
+                            if (goalFlag)
+                            {
+                                lane_monitor.Set_goal(laneNo);
+                                lapCounter[laneNo] = 0;
+                                ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo,mytime);
+                            }
+                            lapTime[laneNo,lapCounter[laneNo]] = intTime;
+                        } 
                     }
                 }
                 await Task.Delay(300);
+                cmdFileIo.get_prgNo_kumi_from_cmd_file( ref prgNo, ref kumi, ref resultFlag);
+                if ((prgNo!=prevPrgNo) || (kumi!=prevKumi)||(resultFlag) )
+                {
+                    int currentPrgNo = get_program_number();
+                    int currentKumi = get_kumi_number();
+                    if (prevPrgNo>0)
+                    {
+                        if ((prgNo != currentPrgNo) || (kumi != currentKumi))
+                        {
+                            set_program_number(prgNo);
+                            set_kumi_number(kumi);
+                            show();
+                        }
+                        if (resultFlag)
+                        {
+                            show_record();
+                            calc_arrival_order();
+                            show_arrival_order();
+                        }
+                    } 
+                    prevPrgNo = prgNo;
+                    prevKumi = kumi;
+                }
                 if (is_race_comp())
                 {
                     lane_monitor.init_lane_monitor();
                     init_lap_counter();
                     timer.Tick += ev1;
-                    timer.Interval = Form1.interval2NextRace;
+                    timer.Interval = 1000*Form1.get_interval_2_next_race();
                     timer.Enabled = true;
                 }
             }
@@ -952,6 +1055,32 @@ namespace ResultSys
         }
 
 
+        private void calc_arrival_order()
+        {
+            int laneNo1, laneNo2;
+            init_array(arrivalOrder, 999999);
+            for (laneNo1 = 1; laneNo1 < maxLaneNo; laneNo1++)
+            {
+                for (laneNo2=laneNo1+1; laneNo2 < maxLaneNo;laneNo2++)
+                {
+                    if (goalTimeArray[laneNo1] > goalTimeArray[laneNo2]) arrivalOrder[laneNo1]++;
+                    if (goalTimeArray[laneNo1] < goalTimeArray[laneNo2]) arrivalOrder[laneNo2]++;
+                }
+            }
+        }
+        private void show_arrival_order()
+        {
+            int laneNo;
+            for (laneNo = 1; laneNo < maxLaneNo;laneNo++)
+            {
+
+                if (arrivalOrder[laneNo]<999999)
+                {
+                    Controls["lblArrivalOrder" + laneNo].Text = "" + arrivalOrder[laneNo];
+                }
+            }
+
+        }
 
         public bool is_occupied(int laneNo)
         {
@@ -999,6 +1128,8 @@ namespace ResultSys
             bool rc = true;
             int laneNo;
 
+            init_array(arrivalOrder,1);
+            init_array(goalTimeArray,999999);
             while (prgNo <= LastPrgNo)
             {
                 int uid = program_db.get_uid_from_prgno(prgNo);
@@ -1019,7 +1150,8 @@ namespace ResultSys
                             swimmerID = misc.if_not_null(dr["選手番号"]);
                             if (swimmerID > 0)
                             {
-                                if (Convert.ToInt32(dr["事由入力ステータス"]) == 0)
+                                int reasonCode = Convert.ToInt32(dr["事由入力ステータス"]);
+                                if (reasonCode == 0)
                                 {
                                     if (dr["ゴール"] == DBNull.Value) rc = false;
                                     else
@@ -1028,20 +1160,17 @@ namespace ResultSys
                                         if (goalTime == "") rc = false;
                                         else
                                         {
-                                            bool newRecord = (misc.timestr2int(goalTime) < program_db.bestRecord[uid]);
-                                            if (program_db.is_relay(uid))
-                                            {
-                                                Controls["lblTime4Relay" + laneNo].Text = goalTime;
-                                                if (newRecord) show_new_record("lblNewRecord4Relay" + laneNo);
-
-                                            } else
-                                            {
-                                                Controls["lblTime" + laneNo].Text = goalTime;
-                                                if (newRecord) show_new_record("lblNewRecord" + laneNo);
-                                            }
+                                            goalTimeArray[laneNo]=misc.timestr2int(goalTime);
+                                            bool newRecord = (goalTimeArray[laneNo] < program_db.bestRecord[uid]);
+                                            Controls["lblTime" + laneNo].Text = goalTime;
+                                            if (newRecord) show_new_record("lblNewRecord" + laneNo);
                                         }
                                     }
 
+
+                                } else
+                                {
+                                        Controls["lblTime" + laneNo].Text = reasonString[reasonCode];
 
                                 }
                             }
@@ -1072,7 +1201,7 @@ namespace ResultSys
         private void set_labeltimer()
         {
             /////----------------------------------lapAliveTime
-            int dispTime = Form1.lapAliveTime;
+            int dispTime = 1000*Form1.get_lap_alive_time();
 
             timerL0 = new System.Windows.Forms.Timer();
             timerL1 = new System.Windows.Forms.Timer();
@@ -1098,11 +1227,6 @@ namespace ResultSys
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (readThread==null)
-            {
-                readThread = new Thread(serial_interface.readandFifoPush);
-                readThread.Start();
-            }
             if (!monitorEnable)
             {
 
@@ -1111,7 +1235,7 @@ namespace ResultSys
                 serial_interface.init_serial_port(cmbBox.Text);
                 timer = new System.Windows.Forms.Timer();
                 set_labeltimer();
-                timer.Interval = Form1.interval2NextRace;
+                timer.Interval = Form1.get_interval_2_next_race();
                 timer.Enabled = false;
                 ev1 = new EventHandler(show_next_race);
                 register_event();
@@ -1124,6 +1248,11 @@ namespace ResultSys
                 stop_monitor();
                 serial_interface.threadPause = true;
                 
+            }
+            if (readThread==null)
+            {
+                readThread = new Thread(serial_interface.readandFifoPush);
+                readThread.Start();
             }
         }
 
@@ -1156,7 +1285,7 @@ namespace ResultSys
 
 
         }
-    }
+}
     public static class serial_interface {
         public static bool threadStop = false;
         public static bool threadPause = false; // Oct.22
@@ -1212,12 +1341,12 @@ namespace ResultSys
                 {
                     try
                     {
-                        while (threadPause) { }
+//                        while (threadPause) { }
                         howmanyread = _serialPort.Read(buffer, 0, 54); // 54=18*3
                     }
                     catch(Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        MessageBox.Show(e.Message);
                         howmanyread = 0;
                     }
                     for (int j = 0; j < howmanyread; j++)
@@ -1233,13 +1362,15 @@ namespace ResultSys
                             {
                                 tmd.push();
                             }
+                            int orderOfArrival;
+                            laneNo = charbyte[2] - 48;
+                            orderOfArrival = charbyte[3] - '0';
 
                             if (is_lap(charbyte))
                             {
-                                laneNo = charbyte[2] - 48;
                                 mytime = Encoding.ASCII.GetString(charbyte, 5, 8);
                                 if ((mytime!=mytimePrev)||(laneNo!=laneNoPrev)) {
-                                    tmd.push(misc.timestr2int(mytime), laneNo, 0);
+                                    tmd.push(misc.timestr2int(mytime), laneNo, orderOfArrival,false);
                                 }
                                 mytimePrev = mytime;
                                 laneNoPrev = laneNo;
@@ -1247,19 +1378,16 @@ namespace ResultSys
                             }
                             if (is_goal(charbyte))
                             {
-                                int orderOfArrival;
-                                laneNo = charbyte[2] - 48;
-                                orderOfArrival = charbyte[3] - '0';
                                 if ((orderOfArrival <= 0) || (orderOfArrival >=11)) {
                                     orderOfArrival = 1;
-                                    setup_file_io.writeLog("Invalid order of arrival.");
+                                    setupFileIo.writeLog("Invalid order of arrival.");
                                     
                                 }
 
                                 mytime = Encoding.ASCII.GetString(charbyte, 5, 8);
                                 if ((mytime != mytimePrev) || (laneNo != laneNoPrev))
                                 {
-                                    tmd.push(misc.timestr2int(mytime), laneNo, orderOfArrival);
+                                    tmd.push(misc.timestr2int(mytime), laneNo, orderOfArrival,true);
                                 }
                                 mytimePrev = mytime;
                                 laneNoPrev = laneNo;
@@ -1271,7 +1399,7 @@ namespace ResultSys
                             //Console.Write("{0} ,{1}", buffer[j], Encoding.ASCII.GetString(buffer, j,1));
                             if (counter > 16)
                             {
-                                setup_file_io.writeLog("error counter reaches 17.");
+                                setupFileIo.writeLog("error counter reaches 17.");
                                 counter = -1;
                             }
                         }
@@ -1307,20 +1435,6 @@ namespace ResultSys
     public static class mdb_interface
     {
 
-        public static bool can_go_with_next(int uid, int kumi, int maxLaneNumber)
-        {
-            int prgNo = program_db.get_race_number_from_uid(uid);
-            int nextuid;
-            if (maxLaneNumber == event_db.get_max_lane_number()) return false;
-            if (kumi > 1) return false;
-            prgNo++;
-            if (prgNo > program_db.get_max_program_no()) return false;
-            nextuid = program_db.get_uid_from_prgno(prgNo);
-            if (!program_db.is_same_distance_style(uid, nextuid)) return false;
-            if (maxLaneNumber < result_db.get_first_occupied_lane(nextuid, 1)) return true;
-            return false;
-
-        }
         public static bool can_go_with_prev(int uid, int kumi)
         {
             int prgNo;
@@ -1340,33 +1454,72 @@ namespace ResultSys
         }
         
     }
-   
+ 
+    public class cmdFileIo
+    {
+
+        private static string cmdFile = "IsisCmd.Txt"; //file name is always IsisCmd.Txt which is the rule of SEIKO
+        public static void set_cmd_file(string cmdFileName)
+        {
+            cmdFile = cmdFileName;
+        }
+        public static bool get_prgNo_kumi_from_cmd_file(ref int prgNo, ref int Kumi, ref bool resultFlag)
+        {
+            try {
+                using (StreamReader reader = new StreamReader(cmdFile, System.Text.Encoding.GetEncoding("sjis")))
+                {
+                    string line = "";
+                    if ((line = reader.ReadLine()) != null)
+                    {
+                        string[] words = line.Split(':');
+
+                        prgNo = Int32.Parse(words[1]);
+                        Kumi = Int32.Parse(words[2]);
+                        resultFlag = (words[0] == "R");
+                    } else return false;
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            
+        }
+     }
+ 
     public  class timeData
     {
         Queue<int> dataFifo = new Queue<int>();
-        private static int timeDataEncode(int timeint, int laneNo, int orderOfArrival)
+        private static int timeDataEncode(int intTime, int laneNo, int orderOfArrival, bool goalFlag)
         {
-            return laneNo * 1000000 + (orderOfArrival * 10000000) + timeint;
+            if (goalFlag)
+            return (laneNo * 1000000 + (orderOfArrival * 10000000) + intTime+100000000);
+            return (laneNo * 1000000 + (orderOfArrival * 10000000) + intTime);
+
         }
-        private static void timeDataDecode(int timedata, ref int timeint, ref int laneNo, ref int goalRank)
+        private static void timeDataDecode(int timedata, ref int intTime, ref int laneNo, ref int orderOfArrival,ref bool goalFlag)
         {
-            goalRank = timedata / 10000000;
+            goalFlag = (timedata >= 100000000);
+            timedata = timedata % 100000000;
+            
+            orderOfArrival = timedata / 10000000;
             laneNo = (timedata % 10000000) / 1000000;
-            timeint = timedata % 1000000;
+            intTime = timedata % 1000000;
         }
         public void push()
         {
             dataFifo.Enqueue(0);
         }
-        public void push(int timeint, int laneNo, int orderOfArrival)
+        public void push(int intTime, int laneNo, int orderOfArrival,bool goalFlag)
         {
-            dataFifo.Enqueue(timeDataEncode(timeint, laneNo, orderOfArrival));
+            dataFifo.Enqueue(timeDataEncode(intTime, laneNo, orderOfArrival,goalFlag));
         }
-        public bool pop(ref int timeint, ref int laneNo, ref int orderOfArrival)
+        public bool pop(ref int intTime, ref int laneNo, ref int orderOfArrival,ref bool goalFlag)
         {
             if (dataFifo.Count>0)
             {
-                timeDataDecode(dataFifo.Dequeue(), ref timeint, ref laneNo, ref orderOfArrival);
+                timeDataDecode(dataFifo.Dequeue(), ref intTime, ref laneNo, ref orderOfArrival, ref goalFlag);
                 return true;
             }
             return false;
