@@ -17,7 +17,7 @@ namespace ResultSys
 
     public partial class Form2 : Form
     {
-        const string magicWord = "Provider=Microsoft.ACE.OLEDB.12.0; Data Source=";
+        const string magicWord = "Provider=Microsoft.ACE.OLEDB.12.0;Mode=Read;Data Source=";
 
         public int timerInterval = 1;
         private bool relayFlag = false;
