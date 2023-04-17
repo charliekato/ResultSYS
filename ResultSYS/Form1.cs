@@ -49,20 +49,15 @@ namespace ResultSys
         public static void set_interval_2_next_race(int newInterval2NextRace) {  interval2NextRace = newInterval2NextRace; }
         public Form1()
         {
-            string mdbFileName="";
-            string cmdFileName="";
             InitializeComponent();
             init_size(930,780);
             set_size_of_list_box(900, 520);
             setupFileIo.read_setup_file(ref folderName, ref interval2NextRace,
-                ref lapAliveTime, ref mdbFileName, ref setupFileIo.logFilePath, ref cmdFileName) ;
-            ExcelConnection.set_mdb_file_name(mdbFileName)  ;
-            cmdFileIo.set_cmd_file(cmdFileName);
+                ref lapAliveTime ) ;
             //MessageBox.Show("db path  " + folderName + " " + interval2NextRace + " " + lapAliveTime);
             //ExcelConnection.delete();
             if (folderName != "")
             {
-                
                 txtBxFolder.Text = folderName;
                 call_showEventList();
             }   
@@ -251,6 +246,7 @@ namespace ResultSys
     {
         private const string setupFileName = "ResultMonitor.ini";
         public static string logFilePath;
+        public static void set_log_file_path(string logFile) { logFilePath=logFile; }
         public static void writeLog( string msg)
         {
             try
@@ -311,8 +307,10 @@ namespace ResultSys
         }
 
         public static void read_setup_file(ref string dbPath, ref int interval2NextRace,
-            ref int lapAliveTime,ref string resultDbPath, ref string logFileName, ref string cmdFile)
+            ref int lapAliveTime )
         {
+            string resultDbPath;
+            string cmdFile;
             try
             {
                 using (StreamReader reader = new StreamReader(setupFileName, System.Text.Encoding.GetEncoding("sjis")))
@@ -336,11 +334,12 @@ namespace ResultSys
                         }
                         if (words[0] == "LOGFILE")
                         {
-                            logFileName = words[1];
+                            setupFileIo.set_log_file_path( words[1]);
                         }
                         if (words[0] == "RESULT")
                         {
                             resultDbPath = words[1];
+                            ExcelConnection.set_mdb_file_name(resultDbPath)  ;
                         }
                         if (words[0] == "CMDFILE")
                         {
@@ -348,7 +347,12 @@ namespace ResultSys
                             if (! File.Exists(cmdFile))
                             {
                                 MessageBox.Show("Command File not found. Check if " + cmdFile + " exists");
+                                cmdFileIo.cmdNotFound = true;
+                            } else
+                            {
+                                cmdFileIo.set_cmd_file(cmdFile);
                             }
+
                         }
                     }
                 }

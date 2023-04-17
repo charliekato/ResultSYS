@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.OleDb;
 using System.Xml.Schema;
+using System.Reflection;
 
 namespace ResultSys
 {
@@ -18,6 +19,7 @@ namespace ResultSys
     public partial class Form2 : Form
     {
         const string magicWord = "Provider=Microsoft.ACE.OLEDB.12.0;Mode=Read;Data Source=";
+        private bool stopPoling = false;
 
         public int timerInterval = 1;
         private bool relayFlag = false;
@@ -142,6 +144,7 @@ namespace ResultSys
                 serial_interface._serialPort.Close();
                 serial_interface.threadStop = true;
             }
+            stopPoling=true;
             this.Close();
 
         }
@@ -470,7 +473,9 @@ namespace ResultSys
             set_kumi_number(1);
             FirstPrgNo = 1;
 
+            cmdFileIo.init();
             show_lane_order();
+            check_cmd_file_loop();
         }
         private void Form2_Load(object sender, EventArgs e)
         {
@@ -960,13 +965,8 @@ namespace ResultSys
             return Convert.ToInt32(distance.Substring(0, strlen-1));
 
         }
-        public async void serial_read()
+        public async void read_serial()
         {
-            int prgNo=1;
-            int kumi=1;
-            int prevPrgNo = 0;
-            int prevKumi = 0;
-            bool resultFlag=false;
             int intTime = 111111;
             int laneNo = 0;
             int arrivalOrder = 0;
@@ -1018,29 +1018,7 @@ namespace ResultSys
                     }
                 }
                 await Task.Delay(300);
-                cmdFileIo.get_prgNo_kumi_from_cmd_file( ref prgNo, ref kumi, ref resultFlag);
-                if ((prgNo!=prevPrgNo) || (kumi!=prevKumi)||(resultFlag) )
-                {
-                    int currentPrgNo = get_program_number();
-                    int currentKumi = get_kumi_number();
-                    if (prevPrgNo>0)
-                    {
-                        if ((prgNo != currentPrgNo) || (kumi != currentKumi))
-                        {
-                            set_program_number(prgNo);
-                            set_kumi_number(kumi);
-                            show();
-                        }
-                        if (resultFlag)
-                        {
-                            show_record();
-                            calc_arrival_order();
-                            show_arrival_order();
-                        }
-                    } 
-                    prevPrgNo = prgNo;
-                    prevKumi = kumi;
-                }
+                //check_cmd_file();
                 if (is_race_comp())
                 {
                     lane_monitor.init_lane_monitor();
@@ -1053,7 +1031,37 @@ namespace ResultSys
                     ///---check---
            
         }
+        private async void check_cmd_file_loop()
+        {
+            while (true) { 
+                await Task.Delay(300);
+                if (stopPoling) return;
+                check_cmd_file();
+            }
+        }
 
+        private void check_cmd_file()
+        {
+            int kumi=0, prgNo=0;
+            bool resultFlag=false;
+            if (cmdFileIo.get_prgNo_kumi_from_cmd_file( ref prgNo, ref kumi, ref resultFlag))
+            {
+                int currentPrgNo = get_program_number();
+                int currentKumi = get_kumi_number();
+                if ((prgNo != currentPrgNo) || (kumi != currentKumi))
+                {
+                    set_program_number(prgNo);
+                    set_kumi_number(kumi);
+                    show();
+                }
+                if (resultFlag)
+                {
+                    show_record();
+                    calc_arrival_order();
+                    show_arrival_order();
+                }
+            }
+        }
 
         private void calc_arrival_order()
         {
@@ -1241,7 +1249,7 @@ namespace ResultSys
                 register_event();
                 //readThread.Start();
                 serial_interface.threadPause = false;
-                serial_read();
+                read_serial();
 
             } else
             {
@@ -1459,12 +1467,42 @@ namespace ResultSys
     {
 
         private static string cmdFile = "IsisCmd.Txt"; //file name is always IsisCmd.Txt which is the rule of SEIKO
+        private static int prevPrgNo, prevKumi;
+        private static bool prevResultFlag;
+        public static bool cmdNotFound = false;
+
         public static void set_cmd_file(string cmdFileName)
         {
             cmdFile = cmdFileName;
         }
+        public static void init()
+        {
+            if (cmdNotFound) return;
+            try
+            {
+                using (StreamReader reader = new StreamReader(cmdFile, System.Text.Encoding.GetEncoding("sjis")))
+                {
+                    string line = "";
+                    if ((line = reader.ReadLine()) != null)
+                    {
+                        string[] words = line.Split(':');
+                        prevPrgNo = Int32.Parse(words[1]);
+                        prevKumi = Int32.Parse(words[2]);
+                        prevResultFlag = (words[0] == "R");
+
+                    }
+
+                }
+            }
+            catch
+            {
+                MessageBox.Show(cmdFile + "(command file) cannot be opened.");
+                cmdNotFound = true;
+            }
+         }
         public static bool get_prgNo_kumi_from_cmd_file(ref int prgNo, ref int Kumi, ref bool resultFlag)
         {
+            if (cmdNotFound) return false;
             try {
                 using (StreamReader reader = new StreamReader(cmdFile, System.Text.Encoding.GetEncoding("sjis")))
                 {
@@ -1476,8 +1514,16 @@ namespace ResultSys
                         prgNo = Int32.Parse(words[1]);
                         Kumi = Int32.Parse(words[2]);
                         resultFlag = (words[0] == "R");
-                    } else return false;
-                    return true;
+                        if ((prgNo !=prevPrgNo)||(Kumi!=prevKumi)||(resultFlag!=prevResultFlag))
+                        {
+                            prevPrgNo = prgNo;
+                            prevKumi = Kumi;
+                            prevResultFlag=resultFlag;
+                            return true;
+                        }
+                        return false;
+                    } 
+                    return false;
                 }
             }
             catch
@@ -1493,9 +1539,17 @@ namespace ResultSys
         Queue<int> dataFifo = new Queue<int>();
         private static int timeDataEncode(int intTime, int laneNo, int orderOfArrival, bool goalFlag)
         {
+            int returnValue;
             if (goalFlag)
-            return (laneNo * 1000000 + (orderOfArrival * 10000000) + intTime+100000000);
-            return (laneNo * 1000000 + (orderOfArrival * 10000000) + intTime);
+            {
+                returnValue=(laneNo * 1000000 + (orderOfArrival * 10000000) + intTime+100000000);
+
+            }
+            else
+            {
+                returnValue=(laneNo * 1000000 + (orderOfArrival * 10000000) + intTime);
+            }
+            return returnValue;
 
         }
         private static void timeDataDecode(int timedata, ref int intTime, ref int laneNo, ref int orderOfArrival,ref bool goalFlag)
