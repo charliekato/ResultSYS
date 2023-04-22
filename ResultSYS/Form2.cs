@@ -21,8 +21,8 @@ namespace ResultSys
         const string magicWord = "Provider=Microsoft.ACE.OLEDB.12.0;Mode=Read;Data Source=";
         private bool stopPoling = false;
 
-        public int timerInterval = 1;
-        private bool relayFlag = false;
+//        public int timerInterval = 1;
+//        private bool relayFlag = false;
 
         private int[] lapCounter = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         private int[] prgNofromLane = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -57,7 +57,7 @@ namespace ResultSys
         private System.Windows.Forms.Timer timerL9;
         private EventHandler ev1;
         private EventHandler evl1, evl2, evl3, evl4, evl5, evl6, evl7, evl8, evl9, evl0;
-        private bool monitorEnable;
+        public static bool monitorEnable=false;
         private int maxLaneNo;
         private string dbfilename;
         private Label mylabel;
@@ -81,7 +81,6 @@ namespace ResultSys
             for ( ix=1; ix<10; ix++)
             {
                 lapCounter[ix] = 0;
-
             }
         }
         public int get_lap_interval()
@@ -128,8 +127,6 @@ namespace ResultSys
             maxLaneNo = event_db.get_max_lane_number();
 
 
-            setupFileIo.writeLog("Form2 started.");
-
             init_form2();
 
         }
@@ -137,13 +134,6 @@ namespace ResultSys
 
         private void btnQuit_Click(object sender, EventArgs e)
         {
-            stop_monitor();
-            if (serial_interface._serialPort != null)
-            {
-                serial_interface._serialPort.ReadTimeout = 1;
-                serial_interface._serialPort.Close();
-                serial_interface.threadStop = true;
-            }
             stopPoling=true;
             this.Close();
 
@@ -181,10 +171,10 @@ namespace ResultSys
         }
         private void layout_button()
         {
-            int top = 5*Width/1200;
+            int top = 2*Width/1200;
             int left = 150*Width/1200;
-            int width = 40*Width/1200;
-            int height = 30*Width/1200;
+            int width = 35*Width/1200;
+            int height = 20*Width/1200;
             int space = 4*Width/1200;
             Controls["btnShow"].Left = left;
             Controls["btnShow"].Top = top;
@@ -198,7 +188,7 @@ namespace ResultSys
             Controls["btnShowNext"].Top = top;
             Controls["btnShowNext"].Height = height;
             Controls["btnShowNext"].Width = width;
-            Controls["lblRaceName0"].Top = 45*Width/1200;
+            Controls["lblRaceName0"].Top = 30*Width/1200;
             Controls["lblRaceName0"].Left = /*2 * (width + space) +*/ left;
         }
         private void layout_label()
@@ -358,28 +348,14 @@ namespace ResultSys
 
 
         }
-        private void show_header(int uid, int prgNo, int laneNo)
+        private void show_header(int uid, int prgNo, int laneNo, int kumi)
         {
 
-            Controls["lblRaceName" + laneNo].Text = "No." + prgNo + "   " + get_race_name(uid);
+            Controls["lblRaceName" + laneNo].Text = "No." + prgNo + "   " + get_race_name(uid) +" "+ kumi+"組";
 
         }
 
-        private void set_tooltip2()
-        {
-            toolTip2.SetToolTip(cbxMonitorEnable, "結果(タイム)取り込みする場合は\n" +
-                    "このcheckを入れる。\n");
-        }
-        private void set_monitor_checkbox()
-        {
-            int boxSize = 10* Width/1200;
-            cbxMonitorEnable.Visible = true;
-            cbxMonitorEnable.Location = new Point(this.Width - (280*Width/1200), (5*Width/1200));
-            cbxMonitorEnable.Size = new Size(boxSize, boxSize);
-            cbxMonitorEnable.Show();
-
-        }
-        private void set_lblPortNo()
+             private void set_lblPortNo()
         {
             lblPortNo.Location = new Point(this.Width - (300*Width/1200), (25*Width/1200));
             lblPortNo.Font = new Font("MS UI Gothic", 12*Width/1200);
@@ -387,20 +363,7 @@ namespace ResultSys
             lblPortNo.Visible = false;
         }
 
-        private void set_cmbBox()
-        {
-            cmbBox.Location = new Point(this.Width - 250*Width/1200, 25*Width/1200);
-            set_portNO_to_combobox();
-            cmbBox.Show();
-            cmbBox.Visible = false;
 
-        }
-
-
-        private void set_txtBoxTimer()
-        {
-
-        }
 
         private void set_quit_button()
         {
@@ -411,11 +374,16 @@ namespace ResultSys
         }
         private void set_start_button()
         {
+            this.btnStart.Name = "btnStart";
+            this.btnStart.TabIndex = 24;
+            this.btnStart.Text = "取込開始";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             btnStart.Location = new Point(this.Width - 125*Width/1200, 10);
             btnStart.Size = new Size(55*Width/1200, 25*Width/1200);
-            btnStart.Font = new Font("MS UI Gothic", 12*Width/1200);
+            btnStart.Font = new Font("MS UI Gothic", 8*Width/1200);
             btnStart.Show();
-            btnStart.Visible = false;
+            btnStart.Visible = true;
         }
         private void set_lbl2xpoolLength()
         {
@@ -433,14 +401,6 @@ namespace ResultSys
             lblLapInterval.Font = new Font("MS UI Gothic", 12*Width/1200);
         }
 
-        private void set_portNO_to_combobox()
-        {
-            foreach (string s in SerialPort.GetPortNames())
-            {
-                cmbBox.Items.Add(s);
-            }
-
-        }
 //        private void disable_monitor()
 //        {
 //            lblPortNo.Visible = false;
@@ -460,11 +420,8 @@ namespace ResultSys
             layout_header_label();
             layout_label();
             layout_button();
-            set_monitor_checkbox();
-            set_cmbBox();
             set_lblPortNo();
-            set_txtBoxTimer();
-            set_tooltip2();
+            //set_txtBoxTimer();
             set_quit_button();
             set_start_button();
             set_lblLapInterval();
@@ -473,9 +430,18 @@ namespace ResultSys
             set_kumi_number(1);
             FirstPrgNo = 1;
 
+            //serial_interface.readandFifoPush();
             cmdFileIo.init();
             show_lane_order();
-            check_cmd_file_loop();
+            //check_cmd_file_loop();
+            if (readThread==null)
+            {
+                readThread = new Thread(serial_interface.readandFifoPush);
+                readThread.Start();
+            }
+            read_serial();
+            register_timer();
+
         }
         private void Form2_Load(object sender, EventArgs e)
         {
@@ -557,7 +523,7 @@ namespace ResultSys
 
             LastPrgNo = prgNo;
             FirstPrgNo = prgNo;
-            show_header(uid, prgNo, 0);
+            show_header(uid, prgNo, 0,kumi);
 
             int laneNo;
             int lastOccupiedLane = 0;
@@ -565,6 +531,7 @@ namespace ResultSys
 
             int first_lane = 0;
             clear_lane_info();
+            init_lap_counter();
             do
             {
                 OleDbConnection conn = new OleDbConnection(connectionString);
@@ -581,7 +548,6 @@ namespace ResultSys
                         while (dr.Read())
                         {
                             laneNo = Convert.ToInt32(dr["水路"]);
-                                
                             //if (dr["選手番号"] == DBNull.Value) continue;
                             if (laneNo > 9) continue;
                             swimmerID[laneNo] = misc.if_not_null(dr["選手番号"]);
@@ -592,7 +558,7 @@ namespace ResultSys
 
                                 if (prevUID != uid) {  //change header
                                     togetherflag = true;
-                                    show_header(uid, prgNo, laneNo);
+                                    show_header(uid, prgNo, laneNo,kumi);
                                     prevUID = uid;
                                 }
                                 uidFromLane[laneNo] = uid;
@@ -602,13 +568,13 @@ namespace ResultSys
 
                                 if (program_db.is_relay(uid))
                                 {
-                                    relayFlag = true;
+//                                    relayFlag = true;
                                     ExcelConnection.append( prgNo, kumi, laneNo, tmDB.get_name(swimmerID[laneNo]));
                                     show_relay_team(laneNo, swimmerID[laneNo], misc.if_not_null(dr["第１泳者"]),
                                       misc.if_not_null(dr["第２泳者"]), misc.if_not_null(dr["第３泳者"]), misc.if_not_null(dr["第４泳者"]));
                                 } else
                                 {
-                                    relayFlag = false;
+//                                    relayFlag = false;
                                     show_swimmer_name(laneNo, swimmerID[laneNo]);
                                     ExcelConnection.append( prgNo, kumi, laneNo, swmDB.get_name(swimmerID[laneNo]));
                                 }
@@ -965,21 +931,21 @@ namespace ResultSys
             return Convert.ToInt32(distance.Substring(0, strlen-1));
 
         }
-        public async void read_serial()
+        private async void read_serial()
         {
             int intTime = 111111;
             int laneNo = 0;
             int arrivalOrder = 0;
             int lapInterval = evtDB.Get_lap_interval();
-            bool goalFlagNotUsed=false;
-            bool goalFlag; //determined by distance
+            bool goalFlag=false;
+            //bool goalFlag; //determined by distance
             tmd = serial_interface.tmd;
 
             while (true)
             {
-                if (!monitorEnable) break;
+              //  if (!monitorEnable) break;
                 bool rc;
-                rc = tmd.pop(ref intTime, ref laneNo, ref arrivalOrder,ref goalFlagNotUsed);
+                rc = tmd.pop(ref intTime, ref laneNo, ref arrivalOrder,ref goalFlag);
                 if (rc)
                 {
                     if (intTime==0)
@@ -999,7 +965,7 @@ namespace ResultSys
                         {
 
                             distance = "" +intDistance + "m";
-                            goalFlag = (intDistance == goalDistance);
+                            //goalFlag = (intDistance == goalDistance);
                             ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo, mytime, distance);
                             write_time(mytime, laneNo,  (ushort) arrivalOrder,distance,goalFlag);
                             write_lap_2(laneNo, intTime, intDistance, goalDistance, lapTime, lapCounter[laneNo],lapInterval);
@@ -1018,11 +984,12 @@ namespace ResultSys
                     }
                 }
                 await Task.Delay(300);
-                //check_cmd_file();
+                if (stopPoling) return;
+                check_cmd_file();
                 if (is_race_comp())
                 {
                     lane_monitor.init_lane_monitor();
-                    init_lap_counter();
+                    //init_lap_counter();
                     timer.Tick += ev1;
                     timer.Interval = 1000*Form1.get_interval_2_next_race();
                     timer.Enabled = true;
@@ -1196,16 +1163,6 @@ namespace ResultSys
         }
 
 
-        private void stop_monitor()
-        {
-            Controls["btnStart"].Text = "開始";
-            monitorEnable = false;
-            //----from here 10/22
-            //serial_interface.threadStop = true;
-            //readThread = null;
-
-        }
-
         private void set_labeltimer()
         {
             /////----------------------------------lapAliveTime
@@ -1233,35 +1190,35 @@ namespace ResultSys
             timerL9.Interval = dispTime; // should be updated to 5000 or so.
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private void register_timer()
         {
-            if (!monitorEnable)
-            {
-
-                Controls["btnStart"].Text = "停止";
-                monitorEnable = true;
-                serial_interface.init_serial_port(cmbBox.Text);
                 timer = new System.Windows.Forms.Timer();
                 set_labeltimer();
                 timer.Interval = Form1.get_interval_2_next_race();
                 timer.Enabled = false;
                 ev1 = new EventHandler(show_next_race);
                 register_event();
-                //readThread.Start();
-                serial_interface.threadPause = false;
-                read_serial();
 
-            } else
-            {
-                stop_monitor();
-                serial_interface.threadPause = true;
-                
-            }
-            if (readThread==null)
-            {
-                readThread = new Thread(serial_interface.readandFifoPush);
-                readThread.Start();
-            }
+        }
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            if (!monitorEnable) start_monitor();
+            else stop_monitor();
+        }        
+        private void stop_monitor()
+        {
+            Controls["btnStart"].Text = "取込開始";
+            lblPending.Visible = true;
+            monitorEnable = false;
+        }
+
+        private void start_monitor()
+        {
+            Controls["btnStart"].Text = "取込停止";
+            lblPending.Visible = false;
+            monitorEnable = true;
+//            register_timer();
+
         }
 
         private void register_event()
@@ -1277,6 +1234,7 @@ namespace ResultSys
             evl9 = new EventHandler(erase_lane9);
             evl0 = new EventHandler(erase_lane0);
         }
+        /*-
         private void cbxMonitorEnable_CheckedChanged(object sender, EventArgs e)
         {
             if (cbxMonitorEnable.Checked) {
@@ -1291,19 +1249,20 @@ namespace ResultSys
 
             }
 
-
         }
+        -*/
 }
     public static class serial_interface {
         public static bool threadStop = false;
-        public static bool threadPause = false; // Oct.22
         public static SerialPort _serialPort=(SerialPort)null;
 
         public static timeData tmd=new timeData();
-        public static void init_serial_port(string portName)
+        public static bool open_serial_port(string portName)
         {
-            if (_serialPort==null)
+            if (_serialPort != null) return true;
+            try
             {
+
                 _serialPort = new SerialPort();
                 _serialPort.PortName = portName;
                 _serialPort.BaudRate = 9600;
@@ -1311,8 +1270,12 @@ namespace ResultSys
                 _serialPort.DataBits = 7;
                 _serialPort.ReadTimeout = -1;
                 _serialPort.Open();
+                return true;
 
-
+            } catch (Exception ex)
+            {
+                _serialPort=null;
+                return false;
             }
         }
 
@@ -1349,8 +1312,7 @@ namespace ResultSys
                 {
                     try
                     {
-//                        while (threadPause) { }
-                        howmanyread = _serialPort.Read(buffer, 0, 54); // 54=18*3
+                        howmanyread =  _serialPort.Read(buffer, 0, 54); // 54=18*3
                     }
                     catch(Exception e)
                     {
@@ -1368,7 +1330,7 @@ namespace ResultSys
                             counter = -1;
                             if (is_start(charbyte))
                             {
-                                tmd.push();
+                                if(Form2.monitorEnable) tmd.push();
                             }
                             int orderOfArrival;
                             laneNo = charbyte[2] - 48;
@@ -1378,7 +1340,9 @@ namespace ResultSys
                             {
                                 mytime = Encoding.ASCII.GetString(charbyte, 5, 8);
                                 if ((mytime!=mytimePrev)||(laneNo!=laneNoPrev)) {
+                                    if (Form2.monitorEnable)
                                     tmd.push(misc.timestr2int(mytime), laneNo, orderOfArrival,false);
+
                                 }
                                 mytimePrev = mytime;
                                 laneNoPrev = laneNo;
@@ -1395,6 +1359,7 @@ namespace ResultSys
                                 mytime = Encoding.ASCII.GetString(charbyte, 5, 8);
                                 if ((mytime != mytimePrev) || (laneNo != laneNoPrev))
                                 {
+                                    if (Form2.monitorEnable)
                                     tmd.push(misc.timestr2int(mytime), laneNo, orderOfArrival,true);
                                 }
                                 mytimePrev = mytime;

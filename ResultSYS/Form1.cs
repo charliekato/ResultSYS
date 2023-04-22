@@ -15,6 +15,7 @@ namespace ResultSys
     public partial class Form1 : Form
     {
         string folderName;
+        public static string comPort;
         private static int interval2NextRace;
         private static int lapAliveTime;
 
@@ -107,13 +108,20 @@ namespace ResultSys
             } else
             {
 
-                selectedString = lbxDbContents.SelectedItem.ToString();
-                //------------------------
-                string[] eventInfo = selectedString.Split(sep,StringSplitOptions.RemoveEmptyEntries);
-                string fullpathDBName = folderName + "\\" + eventInfo[0];
+                if (serial_interface.open_serial_port(comPort) )
+                {
+                    selectedString = lbxDbContents.SelectedItem.ToString();
+                    //------------------------
+                    string[] eventInfo = selectedString.Split(sep,StringSplitOptions.RemoveEmptyEntries);
+                    string fullpathDBName = folderName + "\\" + eventInfo[0];
 
-                form2 = new Form2(fullpathDBName);
-                form2.Show();
+                    form2 = new Form2(fullpathDBName);
+                    form2.Show();
+                } else
+                {
+                    MessageBox.Show("設定画面でCOM PORTを指定してください。");
+                }
+
              }
         }
         private void call_showEventList()
@@ -223,6 +231,12 @@ namespace ResultSys
 
         private void btnQuit_Click(object sender, EventArgs e)
         {
+            if (serial_interface._serialPort != null)
+            {
+                serial_interface._serialPort.ReadTimeout = 1;
+                serial_interface._serialPort.Close();
+                serial_interface.threadStop = true;
+            }
             this.Close();
         }
 

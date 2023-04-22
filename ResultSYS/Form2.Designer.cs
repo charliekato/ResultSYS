@@ -46,6 +46,7 @@
             this.cmbBox = new System.Windows.Forms.ComboBox();
             this.lblPortNo = new System.Windows.Forms.Label();
             this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
+            this.lblPending = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnQuit
@@ -65,7 +66,7 @@
             this.lblRaceName0.Font = new System.Drawing.Font("MS UI Gothic", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblRaceName0.Location = new System.Drawing.Point(669, 33);
             this.lblRaceName0.Name = "lblRaceName0";
-            this.lblRaceName0.Size = new System.Drawing.Size(293, 60);
+            this.lblRaceName0.Size = new System.Drawing.Size(134, 27);
             this.lblRaceName0.TabIndex = 15;
             this.lblRaceName0.Text = "RaceName";
             // 
@@ -74,7 +75,7 @@
             this.tbxPrgNo.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.tbxPrgNo.Location = new System.Drawing.Point(27, 51);
             this.tbxPrgNo.Name = "tbxPrgNo";
-            this.tbxPrgNo.Size = new System.Drawing.Size(85, 43);
+            this.tbxPrgNo.Size = new System.Drawing.Size(85, 23);
             this.tbxPrgNo.TabIndex = 16;
             // 
             // tbxKumi
@@ -82,7 +83,7 @@
             this.tbxKumi.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.tbxKumi.Location = new System.Drawing.Point(150, 51);
             this.tbxKumi.Name = "tbxKumi";
-            this.tbxKumi.Size = new System.Drawing.Size(51, 43);
+            this.tbxKumi.Size = new System.Drawing.Size(51, 23);
             this.tbxKumi.TabIndex = 17;
             this.tbxKumi.TextChanged += new System.EventHandler(this.tbxKumi_TextChanged);
             // 
@@ -91,7 +92,7 @@
             this.lblPrgNo.AutoSize = true;
             this.lblPrgNo.Location = new System.Drawing.Point(47, 21);
             this.lblPrgNo.Name = "lblPrgNo";
-            this.lblPrgNo.Size = new System.Drawing.Size(43, 27);
+            this.lblPrgNo.Size = new System.Drawing.Size(19, 12);
             this.lblPrgNo.TabIndex = 18;
             this.lblPrgNo.Text = "No";
             // 
@@ -100,7 +101,7 @@
             this.lblKumi.AutoSize = true;
             this.lblKumi.Location = new System.Drawing.Point(152, 21);
             this.lblKumi.Name = "lblKumi";
-            this.lblKumi.Size = new System.Drawing.Size(39, 27);
+            this.lblKumi.Size = new System.Drawing.Size(17, 12);
             this.lblKumi.TabIndex = 19;
             this.lblKumi.Text = "組";
             // 
@@ -109,7 +110,7 @@
             this.lblHyphen.AutoSize = true;
             this.lblHyphen.Location = new System.Drawing.Point(118, 62);
             this.lblHyphen.Name = "lblHyphen";
-            this.lblHyphen.Size = new System.Drawing.Size(26, 27);
+            this.lblHyphen.Size = new System.Drawing.Size(11, 12);
             this.lblHyphen.TabIndex = 20;
             this.lblHyphen.Text = "-";
             // 
@@ -145,20 +146,17 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(2237, 4);
+            this.btnStart.Location = new System.Drawing.Point(0, 0);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(94, 68);
-            this.btnStart.TabIndex = 24;
-            this.btnStart.Text = "開始";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            this.btnStart.Size = new System.Drawing.Size(75, 23);
+            this.btnStart.TabIndex = 31;
             // 
             // lblLapInterval
             // 
             this.lblLapInterval.AutoSize = true;
             this.lblLapInterval.Location = new System.Drawing.Point(1894, 25);
             this.lblLapInterval.Name = "lblLapInterval";
-            this.lblLapInterval.Size = new System.Drawing.Size(136, 27);
+            this.lblLapInterval.Size = new System.Drawing.Size(62, 12);
             this.lblLapInterval.TabIndex = 25;
             this.lblLapInterval.Text = "lap interval";
             // 
@@ -167,7 +165,7 @@
             this.lbl2xpoolLength.AutoSize = true;
             this.lbl2xpoolLength.Location = new System.Drawing.Point(2069, 25);
             this.lbl2xpoolLength.Name = "lbl2xpoolLength";
-            this.lbl2xpoolLength.Size = new System.Drawing.Size(60, 27);
+            this.lbl2xpoolLength.Size = new System.Drawing.Size(26, 12);
             this.lbl2xpoolLength.TabIndex = 26;
             this.lbl2xpoolLength.Text = "50m";
             // 
@@ -176,18 +174,17 @@
             this.cbxMonitorEnable.AutoSize = true;
             this.cbxMonitorEnable.Location = new System.Drawing.Point(1555, 17);
             this.cbxMonitorEnable.Name = "cbxMonitorEnable";
-            this.cbxMonitorEnable.Size = new System.Drawing.Size(193, 31);
+            this.cbxMonitorEnable.Size = new System.Drawing.Size(91, 16);
             this.cbxMonitorEnable.TabIndex = 27;
             this.cbxMonitorEnable.Text = "結果取り込み";
             this.cbxMonitorEnable.UseVisualStyleBackColor = true;
-            this.cbxMonitorEnable.CheckedChanged += new System.EventHandler(this.cbxMonitorEnable_CheckedChanged);
             // 
             // cmbBox
             // 
             this.cmbBox.FormattingEnabled = true;
             this.cmbBox.Location = new System.Drawing.Point(1699, 62);
             this.cmbBox.Name = "cmbBox";
-            this.cmbBox.Size = new System.Drawing.Size(63, 35);
+            this.cmbBox.Size = new System.Drawing.Size(63, 20);
             this.cmbBox.TabIndex = 28;
             // 
             // lblPortNo
@@ -195,14 +192,26 @@
             this.lblPortNo.AutoSize = true;
             this.lblPortNo.Location = new System.Drawing.Point(1568, 70);
             this.lblPortNo.Name = "lblPortNo";
-            this.lblPortNo.Size = new System.Drawing.Size(83, 27);
+            this.lblPortNo.Size = new System.Drawing.Size(36, 12);
             this.lblPortNo.TabIndex = 29;
             this.lblPortNo.Text = "COM#";
+            // 
+            // lblPending
+            // 
+            this.lblPending.AutoSize = true;
+            this.lblPending.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblPending.ForeColor = System.Drawing.Color.Red;
+            this.lblPending.Location = new System.Drawing.Point(1137, 0);
+            this.lblPending.Name = "lblPending";
+            this.lblPending.Size = new System.Drawing.Size(66, 19);
+            this.lblPending.TabIndex = 30;
+            this.lblPending.Text = "中断中";
             // 
             // Form2
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(2615, 1058);
+            this.ClientSize = new System.Drawing.Size(1370, 749);
+            this.Controls.Add(this.lblPending);
             this.Controls.Add(this.lblPortNo);
             this.Controls.Add(this.cmbBox);
             this.Controls.Add(this.cbxMonitorEnable);
@@ -245,6 +254,7 @@
         private System.Windows.Forms.ComboBox cmbBox;
         private System.Windows.Forms.Label lblPortNo;
         private System.Windows.Forms.ToolTip toolTip2;
+        private System.Windows.Forms.Label lblPending;
     }
     //////////        
 }
