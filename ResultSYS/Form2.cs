@@ -30,7 +30,7 @@ namespace ResultSys
         //private string[] namefromLane = new string[10] { "", "", "", "", "", "", "", "", "", "" };
 
         
-        private int[,] lapTime = new int[10,30] ;
+        private int[,] lapTime = new int[10,31] ;
         private int[] arrivalOrder = new int[10] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         private int[] goalTimeArray = new int[10] { 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, };
 
@@ -519,6 +519,8 @@ namespace ResultSys
             int uid = program_db.get_uid_from_prgno(prgNo);
             int prevUID = uid;
             string connectionString = magicWord + dbfilename;
+            if (timer != null)
+                timer.Tick -= ev1;
 
 
             LastPrgNo = prgNo;
@@ -595,6 +597,7 @@ namespace ResultSys
                 Controls["lblRaceName" + first_lane].Text = Controls["lblRaceName0"].Text;
                 Controls["lblRaceName0"].Text = "合同レース";
             }
+            lane_monitor.init_lane_monitor(); /* bug fix 2023/10/2 */
         }
         private static bool can_go_with_next(int uid, int prevUID, int kumi, int prevLastLane)
         {
@@ -626,8 +629,6 @@ namespace ResultSys
             int prgNo = LastPrgNo;
             int kumi = get_kumi_number();
 
-            if (timer != null)
-                timer.Tick -= ev1;
             while (true)
             {
                 int uid = program_db.get_uid_from_prgno(prgNo);
@@ -670,44 +671,48 @@ namespace ResultSys
 
         private void lap_case1(int laneNo,int lapCount, int intTime, int[,] lapTime)
         {
+            Controls["lblLapTime_4_" + laneNo].Text = misc.timeint2str(intTime);
             if (lapCount == 2)
             {
-                Controls["lblLapTime_4_" + laneNo].Text = misc.timeint2str(intTime);
                 Controls["lblLapTimekk_4_" + laneNo].Text = "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, 1]))+")";
             }
-            else
-            {
-                Controls["lblLapTime_2_" + laneNo].Text = misc.timeint2str(intTime);
-            }
-
         }
+        // lap_case2 ... distanc==200 and short cource,  distance==400 and long cource 
         private void lap_case2(int laneNo,int lapCount,int intTime, int[,] lapTime)
         {
+            Controls["lblLapTime_" + lapCount + "_" + laneNo].Text = misc.timeint2str(intTime);
             if (lapCount>1)
             {
-                Controls["lblLapTime_" + lapCount + "_" + laneNo].Text = misc.timeint2str(intTime);
                 Controls["lblLapTimekk_"+ lapCount+ "_"+laneNo].Text = 
                    "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, lapCount-1]) )+")";
-            } else
-            {
-                Controls["lblLapTime_" +lapCount+"_"+ laneNo].Text = misc.timeint2str(intTime);
             }
         }
+        /*
+         lap_case3 ...  distance=400 and short couse. or distance==800 and long course.
+          short course case....
+          distance  : 50 100 150 200 250 300 350 400(goal)
+          lapCount  :  1   2   3   4   5   6   7   8
+          bylapCount:  0   1   1   2   2   3   3   4
+        
+          long course case...
+          distance  :100 200 300 400 500 600 700 800
+          lapCount  :  1   2   3   4   5   6   7   8
+          bylapCount:  0   1   1   2   2   3   3   4
+ 
+        */
         private void lap_case3(int laneNo,int lapCount,int intTime, int[,] lapTime)
         {
 
             if ((lapCount % 2) == 1) return;
             int bylapCount = lapCount >> 1;
+            Controls["lblLapTime_" +bylapCount+"_"+ laneNo].Text = misc.timeint2str(intTime);
             if (bylapCount>1)
             {
-                Controls["lblLapTime_" + bylapCount + "_" + laneNo].Text = misc.timeint2str(intTime);
                 Controls["lblLapTimekk_"+ bylapCount+ "_"+laneNo].Text = 
-                   "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, lapCount-1]) )+")";
-            } else
-            {
-                Controls["lblLapTime_" +bylapCount+"_"+ laneNo].Text = misc.timeint2str(intTime);
-            }
+                   "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, lapCount-2]) )+")";
+            } 
         }
+        // lap_case4 ... distance=1500... or distance==800 and short course
         private void lap_case4(int laneNo, int lapCount, int intTime, int[,] lapTime)
         {
             if (lapCount > 4)
@@ -742,13 +747,17 @@ namespace ResultSys
                 if (lapInterval == 100)
                 {
                     lap_case1(laneNo,lapCount, intTime, lapTime);
-                } else
-                lap_case2(laneNo,lapCount,intTime,lapTime);
+                } else/* lapInterval==50 , that is, short cource*/ lap_case2(laneNo,lapCount,intTime,lapTime);
             }
             else if (goalDistance==400)
             {
                 if (lapInterval == 100) lap_case2(laneNo, lapCount, intTime, lapTime);
-                if (lapInterval == 50) lap_case3(laneNo,lapCount,intTime,lapTime);
+                else /* (lapInterval == 50)*/ lap_case3(laneNo,lapCount,intTime,lapTime);
+            }
+            else if (goalDistance==800)
+            {
+                if (lapInterval == 100) lap_case3(laneNo, lapCount, intTime, lapTime);
+                if (lapInterval == 50) lap_case4(laneNo, lapCount, intTime, lapTime);
             }
             else
             {
@@ -906,7 +915,7 @@ namespace ResultSys
         {
             int laneNo;
             int temp;
-            for (laneNo = 1; laneNo < 10; laneNo++)
+            for (laneNo = 0; laneNo < 10; laneNo++)
             {
                 temp = occupied[laneNo];
                 if ((occupied[laneNo] == 1) && (lane_monitor.Is_goal(laneNo) == false))

@@ -74,27 +74,6 @@ namespace ResultSys
         }
 
 
-        static string get_file(string initFile)
-        {
-
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.FileName = initFile;
-            ofd.InitialDirectory = @"C:\Users\ykato";
-            ofd.Filter = "エクセルファイル(*.xlsx)|*.xlsx";
-            ofd.FilterIndex = 2;
-            ofd.Title = "タイムデータが入っているエクセルファイルを選択してください";
-            ofd.RestoreDirectory = true;
-            ofd.CheckFileExists = true;
-            ofd.CheckPathExists = true;
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                //OKボタンがクリックされたとき、選択されたファイル名を表示する
-                Console.WriteLine("> {0} <", ofd.FileName);
-                return (ofd.FileName);
-            }
-            return (initFile);
-        }
 
         private void btnShowLaneOrder_Click(object sender, EventArgs e)
         {
@@ -276,49 +255,7 @@ namespace ResultSys
             }
         }
 
-        public static void write_setup_file(string dbPath )
-        {
-            string[] lineBuf = new string[10];
-            string line;
-            int lineNum = 0;
-            int lastLine=0;
-            try
-            {
-                using (StreamReader reader = new StreamReader(setupFileName, System.Text.Encoding.GetEncoding("sjis")))
-                {
-
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        lineBuf[lineNum] = line;
-                        string[] words = line.Split('>');
-                        if (words[0]=="DBPATH")
-                        {
-                            lineBuf[lineNum] = "DBPATH>" + dbPath;
-                        }
-                        lineNum++;
-                    }
-                }
-                lastLine = lineNum;
-            } catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-            
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(setupFileName, false, System.Text.Encoding.GetEncoding("sjis")))
-                {
-                    for (lineNum=0;lineNum<lastLine;lineNum++)
-                    {
-                        writer.WriteLine(lineBuf[lineNum]);
-                    }
-                }
-            } catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-
-        }
+        
 
         public static void read_setup_file(ref string dbPath, ref int interval2NextRace,
             ref int lapAliveTime )
