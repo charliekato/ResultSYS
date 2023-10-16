@@ -12,6 +12,7 @@ namespace ResultSys
             set_portNO_to_combobox();
             txtboxTimetoNext.Text = Form1.get_interval_2_next_race().ToString();
             txtboxTimetoErase.Text = Form1.get_interval_2_next_race().ToString();
+            this.cmbBox.Text = Form1.comPort;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
