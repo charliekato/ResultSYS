@@ -2,5 +2,7 @@
 bin
 obj
 *.vsidx
-timesub.cs
-timesub.exe
+ResultMonitor.ini
+IsisCmd.txt
+*.bk*
+*.new
