@@ -80,6 +80,7 @@ namespace ResultSys
 
             string selectedString;
             string[] sep = { " " };
+            DialogResult dialogresult = DialogResult.Cancel;
 
             if (lbxDbContents.SelectedItem==null)
             {
@@ -87,19 +88,24 @@ namespace ResultSys
             } else
             {
 
-                if (serial_interface.open_serial_port(comPort) )
+                if (!serial_interface.open_serial_port(comPort) )
                 {
-                    selectedString = lbxDbContents.SelectedItem.ToString();
-                    //------------------------
-                    string[] eventInfo = selectedString.Split(sep,StringSplitOptions.RemoveEmptyEntries);
-                    string fullpathDBName = folderName + "\\" + eventInfo[0];
+                    dialogresult = MessageBox.Show("設定画面でCOM PORTを指定してください。" +
+                            "\r\n取り込みなしで先に進む場合はOKを押してください。","",
+                            MessageBoxButtons.OKCancel);
+                    if (dialogresult != DialogResult.OK) { return; } else
+                    {
+                        Form2.debugMode = true;
+                    }
+                } else { Form2.debugMode=false; }
 
-                    form2 = new Form2(fullpathDBName);
-                    form2.Show();
-                } else
-                {
-                    MessageBox.Show("設定画面でCOM PORTを指定してください。");
-                }
+                selectedString = lbxDbContents.SelectedItem.ToString();
+                //------------------------
+                string[] eventInfo = selectedString.Split(sep,StringSplitOptions.RemoveEmptyEntries);
+                string fullpathDBName = folderName + "\\" + eventInfo[0];
+
+                form2 = new Form2(fullpathDBName);
+                form2.Show();
 
              }
         }

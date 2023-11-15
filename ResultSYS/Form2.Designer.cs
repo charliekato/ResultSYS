@@ -43,8 +43,6 @@
             this.lblLapInterval = new System.Windows.Forms.Label();
             this.lbl2xpoolLength = new System.Windows.Forms.Label();
             this.cbxMonitorEnable = new System.Windows.Forms.CheckBox();
-            this.cmbBox = new System.Windows.Forms.ComboBox();
-            this.lblPortNo = new System.Windows.Forms.Label();
             this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
             this.lblPending = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -172,36 +170,19 @@
             // cbxMonitorEnable
             // 
             this.cbxMonitorEnable.AutoSize = true;
-            this.cbxMonitorEnable.Location = new System.Drawing.Point(1555, 17);
+            this.cbxMonitorEnable.Location = new System.Drawing.Point(1661, 22);
             this.cbxMonitorEnable.Name = "cbxMonitorEnable";
             this.cbxMonitorEnable.Size = new System.Drawing.Size(91, 16);
             this.cbxMonitorEnable.TabIndex = 27;
             this.cbxMonitorEnable.Text = "結果取り込み";
             this.cbxMonitorEnable.UseVisualStyleBackColor = true;
             // 
-            // cmbBox
-            // 
-            this.cmbBox.FormattingEnabled = true;
-            this.cmbBox.Location = new System.Drawing.Point(1699, 62);
-            this.cmbBox.Name = "cmbBox";
-            this.cmbBox.Size = new System.Drawing.Size(63, 20);
-            this.cmbBox.TabIndex = 28;
-            // 
-            // lblPortNo
-            // 
-            this.lblPortNo.AutoSize = true;
-            this.lblPortNo.Location = new System.Drawing.Point(1568, 70);
-            this.lblPortNo.Name = "lblPortNo";
-            this.lblPortNo.Size = new System.Drawing.Size(36, 12);
-            this.lblPortNo.TabIndex = 29;
-            this.lblPortNo.Text = "COM#";
-            // 
             // lblPending
             // 
             this.lblPending.AutoSize = true;
             this.lblPending.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblPending.ForeColor = System.Drawing.Color.Red;
-            this.lblPending.Location = new System.Drawing.Point(1137, 0);
+            this.lblPending.Location = new System.Drawing.Point(1494, 11);
             this.lblPending.Name = "lblPending";
             this.lblPending.Size = new System.Drawing.Size(66, 19);
             this.lblPending.TabIndex = 30;
@@ -210,10 +191,8 @@
             // Form2
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(1370, 749);
+            this.ClientSize = new System.Drawing.Size(1372, 749);
             this.Controls.Add(this.lblPending);
-            this.Controls.Add(this.lblPortNo);
-            this.Controls.Add(this.cmbBox);
             this.Controls.Add(this.cbxMonitorEnable);
             this.Controls.Add(this.lbl2xpoolLength);
             this.Controls.Add(this.lblLapInterval);
@@ -251,8 +230,6 @@
         private System.Windows.Forms.Label lblLapInterval;
         private System.Windows.Forms.Label lbl2xpoolLength;
         private System.Windows.Forms.CheckBox cbxMonitorEnable;
-        private System.Windows.Forms.ComboBox cmbBox;
-        private System.Windows.Forms.Label lblPortNo;
         private System.Windows.Forms.ToolTip toolTip2;
         private System.Windows.Forms.Label lblPending;
     }

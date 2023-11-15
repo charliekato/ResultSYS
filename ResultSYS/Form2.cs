@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Data.OleDb;
 using System.Xml.Schema;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace ResultSys
 {
@@ -19,6 +20,11 @@ namespace ResultSys
     public partial class Form2 : Form
     {
         const string magicWord = "Provider=Microsoft.ACE.OLEDB.12.0;Mode=Read;Data Source=";
+        const int STDWIDTH = 1200; //was 1200
+        const int STDHEIGHT = 800; //was 800
+        const int GAMERECORDPOSX = 780;
+
+        const string fontName = "MS UI Gothic";
         private bool stopPoling = false;
 
 //        public int timerInterval = 1;
@@ -58,6 +64,7 @@ namespace ResultSys
         private EventHandler ev1;
         private EventHandler evl1, evl2, evl3, evl4, evl5, evl6, evl7, evl8, evl9, evl0;
         public static bool monitorEnable=false;
+        public static bool debugMode = false;
         private int maxLaneNo;
         private string dbfilename;
         private Label mylabel;
@@ -141,41 +148,48 @@ namespace ResultSys
 
         private void layout_header_label()
         {
-            Font myFont = new Font("MS UI Gothic", 13*Width/1200);
-            Controls["lblPrgNo"].Left = 10*Width/1200;
-            Controls["lblPrgNo"].Top = 3*Width/1200;
+            Font myFont = new Font(fontName, 13*Width/STDWIDTH);
+            int fontSize = 20*this.Width/STDWIDTH; // was  30
+            Font nameFont = new Font(fontName, fontSize); // was 23
+
+            Controls["lblPrgNo"].Left = 10*Width/STDWIDTH;
+            Controls["lblPrgNo"].Top = 3*Width/STDWIDTH;
             //            Controls["lblPrgNo"].Width = 25;
-            Controls["lblPrgNo"].Height = 20*Width/1200;
+            Controls["lblPrgNo"].Height = 20*Width/STDWIDTH;
             Controls["lblPrgNo"].Font = myFont;
 
-            Controls["tbxPrgNo"].Width = 60*Width/1200;
-            Controls["tbxPrgNo"].Height = 22*Width/1200;
-            Controls["tbxPrgNo"].Left = 5*Width/1200;
-            Controls["tbxPrgNo"].Top = 25*Width/1200;
+            Controls["tbxPrgNo"].Width = 60*Width/STDWIDTH;
+            Controls["tbxPrgNo"].Height = 22*Width/STDWIDTH;
+            Controls["tbxPrgNo"].Left = 5*Width/STDWIDTH;
+            Controls["tbxPrgNo"].Top = 25*Width/STDWIDTH;
             Controls["tbxPrgNo"].Font = myFont;
-            Controls["lblHyphen"].Left = 75*Width/1200;
-            Controls["lblHyphen"].Top = 25*Width/1200;
-            Controls["lblHyphen"].Height = 25*Width/1200;
+            Controls["lblHyphen"].Left = 75*Width/STDWIDTH;
+            Controls["lblHyphen"].Top = 25*Width/STDWIDTH;
+            Controls["lblHyphen"].Height = 25*Width/STDWIDTH;
             Controls["lblHyphen"].Font = myFont;
-            Controls["lblKumi"].Height = 20*Width/1200;
-            Controls["lblKumi"].Left = 95*Width/1200;
-            Controls["lblKumi"].Top = 3*Width/1200;
+            Controls["lblKumi"].Height = 20*Width/STDWIDTH;
+            Controls["lblKumi"].Left = 95*Width/STDWIDTH;
+            Controls["lblKumi"].Top = 3*Width/STDWIDTH;
             Controls["lblKumi"].Font = myFont;
-            Controls["tbxKumi"].Width = 40*Width/1200;
-            Controls["tbxKumi"].Height = 22*Width/1200;
-            Controls["tbxKumi"].Left = 95*Width/1200;
-            Controls["tbxKumi"].Top = 25*Width/1200;
+            Controls["tbxKumi"].Width = 40*Width/STDWIDTH;
+            Controls["tbxKumi"].Height = 22*Width/STDWIDTH;
+            Controls["tbxKumi"].Left = 95*Width/STDWIDTH;
+            Controls["tbxKumi"].Top = 25*Width/STDWIDTH;
             Controls["tbxKumi"].Font = myFont;
 
-            
+            this.cbxMonitorEnable.Location = new System.Drawing.Point(1364*Width/STDWIDTH, 17);
+            this.lblPending.Location = new System.Drawing.Point(1000*Width/STDWIDTH, 2);
+            create_lblName("lblGameRecord", 0, GAMERECORDPOSX*Width/STDWIDTH, 30*Width/STDWIDTH, nameFont, "");
+          
+
         }
         private void layout_button()
         {
-            int top = 2*Width/1200;
-            int left = 150*Width/1200;
-            int width = 35*Width/1200;
-            int height = 20*Width/1200;
-            int space = 4*Width/1200;
+            int top = 2*Width/STDWIDTH;
+            int left = 150*Width/STDWIDTH;
+            int width = 35*Width/STDWIDTH;
+            int height = 20*Width/STDWIDTH;
+            int space = 4*Width/STDWIDTH;
             Controls["btnShow"].Left = left;
             Controls["btnShow"].Top = top;
             Controls["btnShow"].Height = height;
@@ -188,14 +202,12 @@ namespace ResultSys
             Controls["btnShowNext"].Top = top;
             Controls["btnShowNext"].Height = height;
             Controls["btnShowNext"].Width = width;
-            Controls["lblRaceName0"].Top = 30*Width/1200;
+            Controls["lblRaceName0"].Top = 30*Width/STDWIDTH;
             Controls["lblRaceName0"].Left = /*2 * (width + space) +*/ left;
         }
         private void layout_label()
         {
 
-            const int STDWIDTH = 1200; //was 1200
-            const int STDHEIGHT = 800; //was 800
             int topMargin = this.Height / 12;  // 88
 
             int buttomMargin = this.Height / 15; //53
@@ -203,14 +215,13 @@ namespace ResultSys
             int rightMargin = this.Width / 100;     //12 
             int laneNoWidth = this.Width / 20;   //60
             int nameWidth = (this.Width - leftMargin - rightMargin - laneNoWidth) / 4; //220
-            int relayNameWidth = nameWidth - 5;
-            int shozokuWidth = nameWidth - 5;
+//            int relayNameWidth = nameWidth - 5;
+//            int shozokuWidth = nameWidth - 5;
             int relaySwimmerWidth = nameWidth * 5 / 10;
             int laneHeight = (this.Height - topMargin - buttomMargin) / maxLaneNo;
             int kanaHeight = 21*Height/STDHEIGHT; // laneHeight / 5;
             int raceNameHeight = 14*Height/STDHEIGHT; // laneHeight * 3 / 10;
             //      laneHeight = 100;
-            int fontSize = 30*this.Width/STDWIDTH; // was  30
             int aoWidth = 25 * this.Width / STDWIDTH;
             //int fontSizeKana = 12*Width/STDWIDTH;
             int timeWidth = 140 * this.Width / STDWIDTH;
@@ -218,7 +229,7 @@ namespace ResultSys
             int fontSizeShozoku = 21*Width/STDWIDTH;
             int fontsize4relayTeam = 24*Width/STDWIDTH;
             int fontsize4RaceName = 17 * Width / STDWIDTH;
-            const string fontName = "MS UI Gothic";
+            int fontSize = 30*this.Width/STDWIDTH; // was  30
             Font nameFont = new Font(fontName, fontSize); // was 23
             Font relayTeamFont = new Font(fontName, fontsize4relayTeam);
             Font shozokuFont = new Font(fontName, fontSizeShozoku);
@@ -228,6 +239,7 @@ namespace ResultSys
             int halfLaneHeight = fontSize + 4;  // was laneHeight/2
             int relaySwimmerNameHeight=18*Width/STDWIDTH;
             int shozokuNameHeight = 21 * Width / STDWIDTH;
+            int gameRecordPosX = GAMERECORDPOSX*Width/STDWIDTH;
 
             int laneNo;
 
@@ -240,6 +252,7 @@ namespace ResultSys
                 int ypos = yposk + kanaHeight;
                 create_lblName("lblLane", laneNo, xpos, ypos, nameFont, "" + laneNo + ".");
                 create_lblName("lblRaceName", laneNo, xpos, yposr, raceNameFont, "");
+                create_lblName("lblGameRecord", laneNo, gameRecordPosX, yposr, raceNameFont, "");
                 xpos = xpos + laneNoWidth;
                 create_lblName("lblName", laneNo, xpos, ypos, nameFont, "");
                 create_lblName("lblRealyTeamName", laneNo, xpos, ypos, relayTeamFont);
@@ -352,25 +365,18 @@ namespace ResultSys
         {
 
             Controls["lblRaceName" + laneNo].Text = "No." + prgNo + "   " + get_race_name(uid) +" "+ kumi+"組";
+            Controls["lblGameRecord" + laneNo].Text = "大会記録 : " + misc.timeint2str(program_db.bestRecord[uid]);
 
-        }
-
-             private void set_lblPortNo()
-        {
-            lblPortNo.Location = new Point(this.Width - (300*Width/1200), (25*Width/1200));
-            lblPortNo.Font = new Font("MS UI Gothic", 12*Width/1200);
-            lblPortNo.Show();
-            lblPortNo.Visible = false;
         }
 
 
 
         private void set_quit_button()
         {
-            btnQuit.Location = new Point(this.Width - 65*Width/1200, 10);
-            btnQuit.Size = new Size(55*Width/1200, 25*Width/1200);
+            btnQuit.Location = new Point(this.Width - 65*Width/STDWIDTH, 10);
+            btnQuit.Size = new Size(55*Width/STDWIDTH, 25*Width/STDWIDTH);
             btnQuit.Show();
-            btnQuit.Font = new Font("MS UI Gothic", 12*Width/1200);
+            btnQuit.Font = new Font(fontName, 12*Width/STDWIDTH);
         }
         private void set_start_button()
         {
@@ -379,33 +385,27 @@ namespace ResultSys
             this.btnStart.Text = "取込開始";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            btnStart.Location = new Point(this.Width - 125*Width/1200, 10);
-            btnStart.Size = new Size(55*Width/1200, 25*Width/1200);
-            btnStart.Font = new Font("MS UI Gothic", 8*Width/1200);
+            btnStart.Location = new Point(this.Width - 125*Width/STDWIDTH, 10);
+            btnStart.Size = new Size(55*Width/STDWIDTH, 25*Width/STDWIDTH);
+            btnStart.Font = new Font(fontName, 8*Width/STDWIDTH);
             btnStart.Show();
             btnStart.Visible = true;
         }
         private void set_lbl2xpoolLength()
         {
-            lbl2xpoolLength.Location = new Point(this.Width - 60*Width/1200, 38*Width/1200);
-            lbl2xpoolLength.Size = new Size(40*Width/1200, 25*Width/1200);
+            lbl2xpoolLength.Location = new Point(this.Width - 60*Width/STDWIDTH, 38*Width/STDWIDTH);
+            lbl2xpoolLength.Size = new Size(40*Width/STDWIDTH, 25*Width/STDWIDTH);
             lbl2xpoolLength.Show();
-            lbl2xpoolLength.Font = new Font("MS UI Gothic", 12*Width/1200);
+            lbl2xpoolLength.Font = new Font(fontName, 12*Width/STDWIDTH);
             lbl2xpoolLength.Text = Convert.ToString(get_lap_interval());
         }
         private void set_lblLapInterval()
         {
-            lblLapInterval.Location = new Point(this.Width - 142*Width/1200, 40*Width/1200);
+            lblLapInterval.Location = new Point(this.Width - 142*Width/STDWIDTH, 40*Width/STDWIDTH);
 
             lblLapInterval.Show();
-            lblLapInterval.Font = new Font("MS UI Gothic", 12*Width/1200);
+            lblLapInterval.Font = new Font(fontName, 12*Width/STDWIDTH);
         }
-
-//        private void disable_monitor()
-//        {
-//            lblPortNo.Visible = false;
-//            cmbBox.Visible = false;
-//        }
         private void init_form2()
         {
             const int outerMarginX = 0;
@@ -420,7 +420,6 @@ namespace ResultSys
             layout_header_label();
             layout_label();
             layout_button();
-            set_lblPortNo();
             //set_txtBoxTimer();
             set_quit_button();
             set_start_button();
@@ -436,8 +435,10 @@ namespace ResultSys
             //check_cmd_file_loop();
             if (readThread==null)
             {
-                readThread = new Thread(serial_interface.readandFifoPush);
-                readThread.Start();
+                if (!debugMode) { 
+                    readThread = new Thread(serial_interface.readandFifoPush);
+                    readThread.Start();
+                }
             }
             read_serial();
             register_timer();
@@ -499,6 +500,7 @@ namespace ResultSys
                 Controls["lblRaceName" + lane].Text = "";
                 Controls["lblName" + lane].Text = "";
                 Controls["lblShozoku" + lane].Text = "";
+                Controls["lblGameRecord" + lane].Text = "";
                 //Controls["lblKana" + lane].Text = "";
                 for (int swimOrder = 1; swimOrder < 5; swimOrder++)
                 {
@@ -595,7 +597,9 @@ namespace ResultSys
             if (togetherflag)
             {
                 Controls["lblRaceName" + first_lane].Text = Controls["lblRaceName0"].Text;
+                Controls["lblGameRecord" + first_lane].Text = Controls["lblGameRecord0"].Text;
                 Controls["lblRaceName0"].Text = "合同レース";
+                Controls["lblGameRecord0"].Text = "";
             }
             lane_monitor.init_lane_monitor(); /* bug fix 2023/10/2 */
         }
@@ -1243,23 +1247,6 @@ namespace ResultSys
             evl9 = new EventHandler(erase_lane9);
             evl0 = new EventHandler(erase_lane0);
         }
-        /*-
-        private void cbxMonitorEnable_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbxMonitorEnable.Checked) {
-                lblPortNo.Visible = true;
-                cmbBox.Visible = true;
-                btnStart.Visible = true;
-            } else
-            {
-                lblPortNo.Visible = false;
-                cmbBox.Visible = false;
-                btnStart.Visible = false;
-
-            }
-
-        }
-        -*/
 }
     public static class serial_interface {
         public static bool threadStop = false;
@@ -1281,22 +1268,24 @@ namespace ResultSys
                 _serialPort.Open();
                 return true;
 
-            } catch (Exception ex)
+            } catch (Exception /*ex*/)
             {
+                //MessageBox.Show(ex.Message);
+                
                 _serialPort=null;
                 return false;
             }
         }
 
-        public static bool is_start(byte[] timedt)
+        private static bool is_start(byte[] timedt)
         {
             return ((timedt[13] == 'S')); // (timedt[0]=='A'  ) & (timedt[1]=='R')
         }
-        public static bool is_lap(byte[] timedt)
+        private static bool is_lap(byte[] timedt)
         {
             return (timedt[13] == 'L');
         }
-        public static bool is_goal(byte[] timedt)
+        private static bool is_goal(byte[] timedt)
         {
             return (timedt[13] == 'G');
         }
