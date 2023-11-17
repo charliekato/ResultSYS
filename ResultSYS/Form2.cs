@@ -23,6 +23,7 @@ namespace ResultSys
         const int STDWIDTH = 1200; //was 1200
         const int STDHEIGHT = 800; //was 800
         const int GAMERECORDPOSX = 780;
+        const int NEWRECORDNOTICEPOSX = 1000;
 
         const string fontName = "MS UI Gothic";
         private bool stopPoling = false;
@@ -32,10 +33,11 @@ namespace ResultSys
 
         private int[] lapCounter = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         private int[] prgNofromLane = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        private int[] uidFromLane = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         //private int[] kumifromLane = new int[10] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         //private string[] namefromLane = new string[10] { "", "", "", "", "", "", "", "", "", "" };
 
-        
+
         private int[,] lapTime = new int[10,31] ;
         private int[] arrivalOrder = new int[10] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         private int[] goalTimeArray = new int[10] { 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, 999999, };
@@ -76,7 +78,6 @@ namespace ResultSys
         private timeData tmd;
 
         public static int[] occupied = new int[10];
-        private int[] uidFromLane = new int[10];
 
 
         public bool enableAutoRun = true;
@@ -231,6 +232,10 @@ namespace ResultSys
             int fontsize4RaceName = 17 * Width / STDWIDTH;
             int fontSize = 30*this.Width/STDWIDTH; // was  30
             Font nameFont = new Font(fontName, fontSize); // was 23
+            int timeFontSize = 25 * this.Width / STDWIDTH;
+            Font timeFont = new Font(fontName, timeFontSize); // was 23
+            int stimeFontSize = 24 * this.Width / STDWIDTH;
+            Font stimeFont = new Font(fontName, stimeFontSize); // was 23
             Font relayTeamFont = new Font(fontName, fontsize4relayTeam);
             Font shozokuFont = new Font(fontName, fontSizeShozoku);
             //Font kanaFont = new Font(fontName, fontSizeKana); // was 11
@@ -238,8 +243,9 @@ namespace ResultSys
             Font smallNameFont = new Font(fontName, fontSize4Rly);
             int halfLaneHeight = fontSize + 4;  // was laneHeight/2
             int relaySwimmerNameHeight=18*Width/STDWIDTH;
-            int shozokuNameHeight = 21 * Width / STDWIDTH;
+            int shozokuNameHeight = 20 * Width / STDWIDTH;
             int gameRecordPosX = GAMERECORDPOSX*Width/STDWIDTH;
+            int newRecordPosX = NEWRECORDNOTICEPOSX*Width/STDWIDTH;
 
             int laneNo;
 
@@ -273,11 +279,10 @@ namespace ResultSys
                     xpos4relay += relaySwimmerWidth;
                 }
 
-                create_lblName("lblArrivalOrder", laneNo, xpos4relay, ypos, nameFont, "");
+                create_lblName("lblArrivalOrder", laneNo, xpos4relay, ypos-2, timeFont, "");
                 xpos4relay += aoWidth;
-                create_lblName("lblTime", laneNo, xpos4relay, ypos, nameFont, "");
-                create_lblName("lblLapTime", laneNo, xpos4relay-(fontSize/2), ypos+halfLaneHeight, nameFont, "");//2023/03/07
-                create_lblName("lblNewRecord", laneNo, xpos4relay+timeWidth, ypos, nameFont, "");
+                create_lblName("lblTime", laneNo, xpos4relay, ypos-2, stimeFont, "");
+                create_lblName("lblLapTime", laneNo, xpos4relay-(fontSize/2), ypos+halfLaneHeight, timeFont, "");//2023/03/07
 
             }
 
@@ -334,12 +339,12 @@ namespace ResultSys
             if (reason_code == 1)
             {
                 Controls["lblTime" + laneNo].Text = " 棄権";
-                Controls["lblTime" + laneNo].BackColor = Color.FromArgb(240, 240, 240);
+                Controls["lblTime" + laneNo].ForeColor = Color.Black;
             }
             if (reason_code == 2)
             {
                 Controls["lblTime" + laneNo].Text = " 失格";
-                Controls["lblTime" + laneNo].BackColor = Color.FromArgb(240, 240, 240);
+//                Controls["lblTime" + laneNo].BackColor = Color.FromArgb(240, 240, 240);
             }
         }
         public void show_reason4Relay_and_set_occupied(int laneNo, int reason_code)
@@ -509,7 +514,6 @@ namespace ResultSys
                     Controls["lblRelaySwimmer" + swimOrder + lane].Text = "";
                     //Controls["lblRelaySwimmerKana" + swimOrder + lane].Text = "";
                 }
-                Controls["lblNewRecord" + lane].Text = "";
             }
         }
 
@@ -675,9 +679,13 @@ namespace ResultSys
 
         private void lap_case1(int laneNo,int lapCount, int intTime, int[,] lapTime)
         {
-            Controls["lblLapTime_4_" + laneNo].Text = misc.timeint2str(intTime);
+            if (lapCount == 1) { 
+                Controls["lblLapTime_2_" + laneNo].Text = misc.timeint2str(intTime);
+            }
+            
             if (lapCount == 2)
             {
+                Controls["lblLapTime_4_" + laneNo].Text = misc.timeint2str(intTime);
                 Controls["lblLapTimekk_4_" + laneNo].Text = "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, 1]))+")";
             }
         }
@@ -769,12 +777,24 @@ namespace ResultSys
             }
 
         }
-        private void write_time(string goalTime, int laneNo,ushort orderOfArrival,string distance,bool fin=false)
+        private void write_time(int intGoalTime, int laneNo,ushort orderOfArrival,string distance,bool fin=false, int gameRecord=0)
         {
+	    string goalTime=misc.timeint2str(intGoalTime);
             if (fin)
-                Controls["lblTime" + laneNo].Text = goalTime + "  Fin";
+            {
+
+                if (intGoalTime<gameRecord)
+                {
+                    Controls["lblTime" + laneNo].Text = goalTime+"大会新";
+                    Controls["lblTime" + laneNo].ForeColor = System.Drawing.Color.Red;
+                } else {
+                    Controls["lblTime" + laneNo].Text = goalTime+"  Fin";
+                    Controls["lblTime" + laneNo].ForeColor = System.Drawing.Color.Black;
+                }
+            }
             else
             {
+                Controls["lblTime" + laneNo].ForeColor = System.Drawing.Color.Black;
                 Controls["lblTime" + laneNo].Text = goalTime + "  " + distance ;
                 enable_timer(laneNo);
             }
@@ -969,18 +989,19 @@ namespace ResultSys
                     else
                     {
                         lapCounter[laneNo]++;
-                        string mytime = misc.timeint2str(intTime);
+                        //string mytime = misc.timeint2str(intTime);
                         
                         string distance;
                         int intDistance = lapCounter[laneNo] * lapInterval;
                         int goalDistance = get_distance_from_lane(laneNo);
+                        int gameRecord = program_db.bestRecord[uidFromLane[laneNo]];
                         if (goalDistance>0)
                         {
 
                             distance = "" +intDistance + "m";
                             //goalFlag = (intDistance == goalDistance);
-                            ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo, mytime, distance);
-                            write_time(mytime, laneNo,  (ushort) arrivalOrder,distance,goalFlag);
+                            ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo, intTime, distance);
+                            write_time(intTime, laneNo,  (ushort) arrivalOrder,distance,goalFlag,gameRecord);
                             write_lap_2(laneNo, intTime, intDistance, goalDistance, lapTime, lapCounter[laneNo],lapInterval);
                             if (lapCounter[laneNo]>1)
                             {
@@ -990,7 +1011,7 @@ namespace ResultSys
                             {
                                 lane_monitor.Set_goal(laneNo);
                                 lapCounter[laneNo] = 0;
-                                ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo,mytime);
+                                ExcelConnection.insert_time(prgNofromLane[laneNo], get_kumi_number(), laneNo,intTime);
                             }
                             lapTime[laneNo,lapCounter[laneNo]] = intTime;
                         } 
@@ -1151,7 +1172,6 @@ namespace ResultSys
                                             goalTimeArray[laneNo]=misc.timestr2int(goalTime);
                                             bool newRecord = (goalTimeArray[laneNo] < program_db.bestRecord[uid]);
                                             Controls["lblTime" + laneNo].Text = goalTime;
-                                            if (newRecord) show_new_record("lblNewRecord" + laneNo);
                                         }
                                     }
 
@@ -1169,12 +1189,6 @@ namespace ResultSys
             }
             return rc;
         }
-        public void show_new_record(string lblname)
-        {
-            Controls[lblname].Text = "大会新";
-            Controls[lblname].BackColor = Color.Pink;
-        }
-
 
         private void set_labeltimer()
         {

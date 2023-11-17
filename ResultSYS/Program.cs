@@ -128,10 +128,11 @@ namespace ResultSys
             return "";
         }
 
-        public static void insert_time(int prgNo, int kumi, int laneNo, string time, string distance="GOAL")
+        public static void insert_time(int prgNo, int kumi, int laneNo, int intTime, string distance="GOAL")
         {
              String connectionString = magicWord + mdbFile + magicTail;
 
+	     string time = misc.timeint2str(intTime);
                
             using (OleDbConnection conn = new OleDbConnection(connectionString))
             {
