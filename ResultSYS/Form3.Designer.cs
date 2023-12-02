@@ -1,4 +1,4 @@
-﻿namespace ResultSys
+﻿namespace ResultSYS
 {
     partial class frmsetup
     {

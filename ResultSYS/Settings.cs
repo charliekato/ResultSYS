@@ -1,4 +1,4 @@
-﻿namespace ResultSys.Properties {
+﻿namespace ResultSYS.Properties {
     
     
     // このクラスでは設定クラスでの特定のイベントを処理することができます:

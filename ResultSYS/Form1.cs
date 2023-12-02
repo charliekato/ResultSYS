@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 
 
-namespace ResultSys
+namespace ResultSYS
 {
 
     public partial class Form1 : Form
@@ -236,10 +236,6 @@ namespace ResultSys
 
         }
 
-        private void btnInitDB_Click(object sender, EventArgs e)
-        {
-            ExcelConnection.delete();
-        }
     }
     public static class setupFileIo
     {

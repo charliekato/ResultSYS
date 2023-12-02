@@ -13,7 +13,7 @@ using System.Xml.Schema;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace ResultSys
+namespace ResultSYS
 {
 
 
@@ -28,6 +28,7 @@ namespace ResultSys
         const string fontName = "MS UI Gothic";
         private bool stopPoling = false;
 
+        string connectionString = "";
 //        public int timerInterval = 1;
 //        private bool relayFlag = false;
 
@@ -123,7 +124,7 @@ namespace ResultSys
         {
             InitializeComponent();
             this.dbfilename = filename;
-            string connectionString = magicWord + filename;
+            connectionString = magicWord + filename;
             result_db.set_connectionString(connectionString);
 
             evtDB = new event_db(connectionString);
@@ -133,6 +134,7 @@ namespace ResultSys
             swmDB = new swimmer_db(connectionString);
             rcdDB = new record_db(connectionString);
             maxLaneNo = event_db.get_max_lane_number();
+
 
 
             init_form2();
@@ -517,14 +519,16 @@ namespace ResultSys
             }
         }
 
-        public void show()
+
+
+        private void show()
         {
             int prgNo = get_program_number();
             int kumi = get_kumi_number();
             int[] swimmerID = new int[10];
             int uid = program_db.get_uid_from_prgno(prgNo);
             int prevUID = uid;
-            string connectionString = magicWord + dbfilename;
+            //string connectionString = magicWord + dbfilename;
             if (timer != null)
                 timer.Tick -= ev1;
 
@@ -571,23 +575,26 @@ namespace ResultSys
                                 }
                                 uidFromLane[laneNo] = uid;
 
-                                ExcelConnection.program_append(prgNo, program_db.get_class_from_uid(uid),program_db.get_gender_from_uid(uid),
-                                    program_db.get_distance_from_uid(uid),program_db.get_shumoku_from_uid(uid), program_db.get_phase_from_uid(uid));
+                                //ExcelConnection.program_append(prgNo, program_db.get_class_from_uid(uid),program_db.get_gender_from_uid(uid),
+                                //    program_db.get_distance_from_uid(uid),program_db.get_shumoku_from_uid(uid), program_db.get_phase_from_uid(uid));
 
                                 if (program_db.is_relay(uid))
                                 {
 //                                    relayFlag = true;
-                                    ExcelConnection.append( prgNo, kumi, laneNo, tmDB.get_name(swimmerID[laneNo]));
+                                    //ExcelConnection.append( prgNo, kumi, laneNo, tmDB.get_name(swimmerID[laneNo]));
                                     show_relay_team(laneNo, swimmerID[laneNo], misc.if_not_null(dr["第１泳者"]),
                                       misc.if_not_null(dr["第２泳者"]), misc.if_not_null(dr["第３泳者"]), misc.if_not_null(dr["第４泳者"]));
                                 } else
                                 {
 //                                    relayFlag = false;
                                     show_swimmer_name(laneNo, swimmerID[laneNo]);
-                                    ExcelConnection.append( prgNo, kumi, laneNo, swmDB.get_name(swimmerID[laneNo]));
+                                    //ExcelConnection.append( prgNo, kumi, laneNo, swmDB.get_name(swimmerID[laneNo]));
                                 }
                                 show_reason_and_set_occupied(laneNo, Convert.ToInt32(dr["事由入力ステータス"]));
                                 lastOccupiedLane = laneNo;
+                            } else
+                            {
+
                             }
                         }
                     }
@@ -1097,7 +1104,7 @@ namespace ResultSys
             int kumi = get_kumi_number();
             int swimmerID;
 
-            string connectionString = magicWord + dbfilename;
+            //string connectionString = magicWord + dbfilename;
             bool rc = false;
             int uid = program_db.get_uid_from_prgno(prgNo);
             OleDbConnection conn = new OleDbConnection(connectionString);
@@ -1133,7 +1140,7 @@ namespace ResultSys
             int kumi = get_kumi_number();
             int swimmerID;
 
-            string connectionString = magicWord + dbfilename;
+            //string connectionString = magicWord + dbfilename;
             bool rc = true;
             int laneNo;
 

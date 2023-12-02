@@ -2,7 +2,7 @@
 
 using System.Data.OleDb;
 
-namespace ResultSys
+namespace ResultSYS
 {
 
 

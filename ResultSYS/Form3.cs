@@ -2,7 +2,7 @@
 using System.IO.Ports;
 using System.Windows.Forms;
 
-namespace ResultSys
+namespace ResultSYS
 {
     public partial class frmsetup : Form
     {

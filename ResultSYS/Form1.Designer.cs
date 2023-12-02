@@ -1,4 +1,4 @@
-﻿namespace ResultSys
+﻿namespace ResultSYS
 {
     partial class Form1
     {
@@ -28,18 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.btnShowLaneOrder = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtBxFolder = new System.Windows.Forms.TextBox();
             this.btnFolderSelect = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.lbxDbContents = new System.Windows.Forms.ListBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip1 = new System.Windows.Forms.ToolTip();
             this.btnQuit = new System.Windows.Forms.Button();
-            this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip2 = new System.Windows.Forms.ToolTip();
             this.btnSetup = new System.Windows.Forms.Button();
-            this.btnInitDB = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnShowLaneOrder
@@ -129,24 +127,11 @@
             this.btnSetup.UseVisualStyleBackColor = true;
             this.btnSetup.Click += new System.EventHandler(this.button1_Click);
             // 
-            // btnInitDB
-            // 
-            this.btnInitDB.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnInitDB.Location = new System.Drawing.Point(699, 98);
-            this.btnInitDB.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.btnInitDB.Name = "btnInitDB";
-            this.btnInitDB.Size = new System.Drawing.Size(72, 33);
-            this.btnInitDB.TabIndex = 10;
-            this.btnInitDB.Text = "InitDB";
-            this.btnInitDB.UseVisualStyleBackColor = true;
-            this.btnInitDB.Click += new System.EventHandler(this.btnInitDB_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1036, 467);
-            this.Controls.Add(this.btnInitDB);
             this.Controls.Add(this.btnSetup);
             this.Controls.Add(this.btnQuit);
             this.Controls.Add(this.lbxDbContents);
@@ -175,7 +160,6 @@
         private System.Windows.Forms.Button btnQuit;
         private System.Windows.Forms.ToolTip toolTip2;
         private System.Windows.Forms.Button btnSetup;
-        private System.Windows.Forms.Button btnInitDB;
     }
 }
 

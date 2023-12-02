@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.OleDb;
 
-namespace ResultSys
+namespace ResultSYS
 {
     static class Program
     {
