@@ -2,7 +2,7 @@
 bin
 obj
 *.vsidx
-ResultMonitor.ini
 IsisCmd.txt
 *.bk*
 *.new
+ResultSYS_TemporaryKey.pfx
