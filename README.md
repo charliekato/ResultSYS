@@ -19,4 +19,13 @@ others フォルダーの cs ファイルはVisual Studioではなく csc でコ
 run.plで使っている　accessのdbをhtml形式に変換するプログラム。swmresult.accdbからhtml形式形式で標準出力に出力する。
 otherというフォルダーにある。 visual studioではなくコマンドラインから csc でコンパイルする。
 
+### mkReadme
+セイコーリザルトシステムのデータベースのdirectoryに移動してmkreadme とタイプする。
+mkreadme > readme.txt とやれば、 各mdbはどの大会の物かがわかるreadme.txtを作ってくれる。
+![スクリーンショット 2023-12-07 211451](https://github.com/charliekato/csharp/assets/122329903/4f8dfed6-dfa9-4964-94a3-2470706148e8)
 
+### chkcomport
+セイコーリザルトシステムでオンラインの設定を行う際にどの通信ポートにすればよいか調べるときに使う。ダブルクリック もしくはコマンドラインから chkComportとタイプ。
+
+
+![スクリーンショット 2023-12-06 070934](https://github.com/charliekato/csharp/assets/122329903/1e593826-8ffb-46fa-973a-bbb5a0eaf0f8)
