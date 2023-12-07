@@ -2,6 +2,12 @@
 
 ## ResultSYS (ResultMonitor)
 セイコーの競泳リザルトシステム v5 のデータベースを読み込んでレーン順を表示するプロクラム
+
+![スクリーンショット 2023-12-07 222112](https://github.com/charliekato/ResultSYS/assets/122329903/21312b27-dd70-4602-b850-058f1e1f1aff)
+
+*スクリーンショット*
+
+
 プログラムを動かすためには次のファイルが必要
 1. ResultMonitor.exe  (Visual studioを使ってbuildする。)
 2. ResultMonitor.ini (1のexeと同じフォルダーに保存しておく)
