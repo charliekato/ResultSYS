@@ -372,7 +372,7 @@ namespace ResultSYS
         {
 
             Controls["lblRaceName" + laneNo].Text = "No." + prgNo + "   " + get_race_name(uid) +" "+ kumi+"組";
-            Controls["lblGameRecord" + laneNo].Text = "大会記録 : " + misc.timeint2str(program_db.bestRecord[uid]);
+            Controls["lblGameRecord" + laneNo].Text = "大会記録 : " + misc.timeint2str(program_db.GetBestRecordFromUID(uid));
 
         }
 
@@ -740,12 +740,12 @@ namespace ResultSYS
                 for (lc = 1; lc < 4; lc++)
                 {
                     int lcp1 = lc + 1;
-                    Controls["lblLap_Time_" + lc + "_" + laneNo].Text = Controls["lblLap_Time_" + lcp1 + "_" + laneNo].Text;
-                    Controls["lblLap_Timekk_" + lc + "_" + laneNo].Text = Controls["lblLap_Timekk_" + lcp1 + "_" + laneNo].Text;
+                    Controls["lblLapTime_" + lc + "_" + laneNo].Text = Controls["lblLapTime_" + lcp1 + "_" + laneNo].Text;
+                    Controls["lblLapTimekk_" + lc + "_" + laneNo].Text = Controls["lblLapTimekk_" + lcp1 + "_" + laneNo].Text;
 
                 }
-                Controls["lblLap_Time_4_" + laneNo].Text = misc.timeint2str(intTime);
-                Controls["lblLap_Timekk_4_" + laneNo].Text =
+                Controls["lblLapTime_4_" + laneNo].Text = misc.timeint2str(intTime);
+                Controls["lblLapTimekk_4_" + laneNo].Text =
                    "(" + misc.timeint2str(misc.substract_time(intTime, lapTime[laneNo, lapCount - 1])) + ")";
             }
             else lap_case2(laneNo, lapCount, intTime, lapTime);
@@ -1001,7 +1001,7 @@ namespace ResultSYS
                         string distance;
                         int intDistance = lapCounter[laneNo] * lapInterval;
                         int goalDistance = get_distance_from_lane(laneNo);
-                        int gameRecord = program_db.bestRecord[uidFromLane[laneNo]];
+                        int gameRecord = program_db.GetBestRecordFromUID(uidFromLane[laneNo]);
                         if (goalDistance>0)
                         {
 
@@ -1177,7 +1177,7 @@ namespace ResultSYS
                                         else
                                         {
                                             goalTimeArray[laneNo]=misc.timestr2int(goalTime);
-                                            bool newRecord = (goalTimeArray[laneNo] < program_db.bestRecord[uid]);
+                                            bool newRecord = (goalTimeArray[laneNo] < program_db.GetBestRecordFromUID(uid));
                                             Controls["lblTime" + laneNo].Text = goalTime;
                                         }
                                     }

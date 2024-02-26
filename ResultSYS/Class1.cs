@@ -402,7 +402,7 @@ namespace ResultSYS
                         int styleNo = program_db.locate_style_number(Convert.ToString(dr["種目"]));
                         int distanceNo = program_db.locate_distance_number(Convert.ToString(dr["距離"]));
                         int uid = program_db.locate_uid(classNo, gender, distanceNo, styleNo);
-                        program_db.bestRecord[uid] = misc.timestr2int(Convert.ToString(dr["記録"]));
+                        program_db.bestRecord[classNo,gender,styleNo,distanceNo] = misc.timestr2int(Convert.ToString(dr["記録"]));
                     }
                 }
 
@@ -442,6 +442,8 @@ namespace ResultSYS
                     {
                         maxClassNumber = Convert.ToInt32(dr["番号"]);
                         Array.Resize<string>(ref className, maxClassNumber + 1);
+                        
+                        program_db.bestRecord = new int[maxClassNumber+1,4,8,8];
                     }
                 }
             }
@@ -471,18 +473,18 @@ namespace ResultSYS
     
     public class program_db
     {
-        static int[] classNumberbyUID;
+        public static int[] classNumberbyUID ;
         static string[] phase;
-        static string[] distancebyUID;
+        public static string[] distancebyUID;
 
 
         static string currentConnectionString;
 
-        static int[] ShumokubyUID;
+        public static int[] ShumokubyUID;
         static int[] raceNobyUID;
         static int[] UIDFromRaceNo;
-        public static int[] bestRecord;
-        static int[] GenderbyUID;
+        public static int[,,,] bestRecord { get; set; }
+        public static int[] GenderbyUID;
         static int maxUID;
         static int maxProgramNo;
         const int NUMSTYLE = 7;
@@ -497,6 +499,16 @@ namespace ResultSYS
         readonly static string[] GenderStr = new string[3] { "男子", "女子", "混合" };
         public static int get_max_program_no() { return maxProgramNo; }
 
+        public static int GetBestRecordFromUID(int uid)
+        {
+            int classNo, gender, style, distance;
+            classNo = classNumberbyUID[uid];
+            gender = GenderbyUID[uid];
+            style = ShumokubyUID[uid];
+            distance = locate_distance_number(distancebyUID[uid]);
+            return bestRecord[classNo, gender, style, distance];
+
+        }
         public int Get_max_laneNo()
         {
             int maxLaneNo;
@@ -762,7 +774,6 @@ namespace ResultSYS
             distancebyUID = new string[ubound];
             ShumokubyUID = new int[ubound];
             raceNobyUID = new int[ubound];
-            bestRecord = new int[ubound];
             GenderbyUID = new int[ubound];
 
         }
