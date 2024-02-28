@@ -43,29 +43,29 @@
             // 
             this.lblLapAliveTime.AutoSize = true;
             this.lblLapAliveTime.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblLapAliveTime.Location = new System.Drawing.Point(46, 54);
-            this.lblLapAliveTime.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.lblLapAliveTime.Location = new System.Drawing.Point(100, 108);
+            this.lblLapAliveTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblLapAliveTime.Name = "lblLapAliveTime";
-            this.lblLapAliveTime.Size = new System.Drawing.Size(201, 16);
+            this.lblLapAliveTime.Size = new System.Drawing.Size(401, 33);
             this.lblLapAliveTime.TabIndex = 0;
             this.lblLapAliveTime.Text = "ラップタイムを表示している時間";
             // 
             // txtboxTimetoErase
             // 
-            this.txtboxTimetoErase.Location = new System.Drawing.Point(394, 54);
-            this.txtboxTimetoErase.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.txtboxTimetoErase.Location = new System.Drawing.Point(854, 108);
+            this.txtboxTimetoErase.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.txtboxTimetoErase.Name = "txtboxTimetoErase";
-            this.txtboxTimetoErase.Size = new System.Drawing.Size(53, 19);
+            this.txtboxTimetoErase.Size = new System.Drawing.Size(110, 31);
             this.txtboxTimetoErase.TabIndex = 1;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(46, 94);
-            this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label2.Location = new System.Drawing.Point(100, 188);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(294, 16);
+            this.label2.Size = new System.Drawing.Size(588, 33);
             this.label2.TabIndex = 3;
             this.label2.Text = "全員ゴールしてから次のレースを表示する時間";
             // 
@@ -73,10 +73,10 @@
             // 
             this.lblms1.AutoSize = true;
             this.lblms1.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblms1.Location = new System.Drawing.Point(451, 52);
-            this.lblms1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.lblms1.Location = new System.Drawing.Point(977, 104);
+            this.lblms1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblms1.Name = "lblms1";
-            this.lblms1.Size = new System.Drawing.Size(23, 16);
+            this.lblms1.Size = new System.Drawing.Size(47, 33);
             this.lblms1.TabIndex = 4;
             this.lblms1.Text = "秒";
             // 
@@ -84,27 +84,27 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(451, 94);
-            this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label1.Location = new System.Drawing.Point(977, 188);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(23, 16);
+            this.label1.Size = new System.Drawing.Size(47, 33);
             this.label1.TabIndex = 5;
             this.label1.Text = "秒";
             // 
             // txtboxTimetoNext
             // 
-            this.txtboxTimetoNext.Location = new System.Drawing.Point(394, 96);
-            this.txtboxTimetoNext.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.txtboxTimetoNext.Location = new System.Drawing.Point(854, 192);
+            this.txtboxTimetoNext.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.txtboxTimetoNext.Name = "txtboxTimetoNext";
-            this.txtboxTimetoNext.Size = new System.Drawing.Size(53, 19);
+            this.txtboxTimetoNext.Size = new System.Drawing.Size(110, 31);
             this.txtboxTimetoNext.TabIndex = 6;
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(224, 192);
-            this.btnOK.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.btnOK.Location = new System.Drawing.Point(485, 384);
+            this.btnOK.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(64, 30);
+            this.btnOK.Size = new System.Drawing.Size(139, 60);
             this.btnOK.TabIndex = 7;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -113,26 +113,28 @@
             // cmbBox
             // 
             this.cmbBox.FormattingEnabled = true;
-            this.cmbBox.Location = new System.Drawing.Point(224, 129);
+            this.cmbBox.Location = new System.Drawing.Point(485, 258);
+            this.cmbBox.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.cmbBox.Name = "cmbBox";
-            this.cmbBox.Size = new System.Drawing.Size(80, 20);
+            this.cmbBox.Size = new System.Drawing.Size(169, 32);
             this.cmbBox.TabIndex = 8;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(46, 133);
+            this.label3.Location = new System.Drawing.Point(100, 266);
+            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(134, 16);
+            this.label3.Size = new System.Drawing.Size(270, 33);
             this.label3.TabIndex = 9;
             this.label3.Text = "シリアルポート　番号";
             // 
             // frmsetup
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(525, 259);
+            this.ClientSize = new System.Drawing.Size(1138, 1106);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbBox);
             this.Controls.Add(this.btnOK);
@@ -142,7 +144,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.txtboxTimetoErase);
             this.Controls.Add(this.lblLapAliveTime);
-            this.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.Name = "frmsetup";
             this.Text = "設定";
             this.ResumeLayout(false);

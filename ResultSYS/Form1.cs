@@ -56,7 +56,7 @@ namespace ResultSYS
             setupFileIo.read_setup_file(ref folderName, ref interval2NextRace,
                 ref lapAliveTime ) ;
             //MessageBox.Show("db path  " + folderName + " " + interval2NextRace + " " + lapAliveTime);
-            //ExcelConnection.delete();
+            ExcelConnection.delete();
             if (folderName != "")
             {
                 txtBxFolder.Text = folderName;

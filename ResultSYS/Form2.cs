@@ -575,20 +575,20 @@ namespace ResultSYS
                                 }
                                 uidFromLane[laneNo] = uid;
 
-                                //ExcelConnection.program_append(prgNo, program_db.get_class_from_uid(uid),program_db.get_gender_from_uid(uid),
-                                //    program_db.get_distance_from_uid(uid),program_db.get_shumoku_from_uid(uid), program_db.get_phase_from_uid(uid));
+                                ExcelConnection.program_append(prgNo, program_db.get_class_from_uid(uid),program_db.get_gender_from_uid(uid),
+                                    program_db.get_distance_from_uid(uid),program_db.get_shumoku_from_uid(uid), program_db.get_phase_from_uid(uid));
 
                                 if (program_db.is_relay(uid))
                                 {
 //                                    relayFlag = true;
-                                    //ExcelConnection.append( prgNo, kumi, laneNo, tmDB.get_name(swimmerID[laneNo]));
+                                    ExcelConnection.append( prgNo, kumi, laneNo, tmDB.get_name(swimmerID[laneNo]));
                                     show_relay_team(laneNo, swimmerID[laneNo], misc.if_not_null(dr["第１泳者"]),
                                       misc.if_not_null(dr["第２泳者"]), misc.if_not_null(dr["第３泳者"]), misc.if_not_null(dr["第４泳者"]));
                                 } else
                                 {
 //                                    relayFlag = false;
                                     show_swimmer_name(laneNo, swimmerID[laneNo]);
-                                    //ExcelConnection.append( prgNo, kumi, laneNo, swmDB.get_name(swimmerID[laneNo]));
+                                    ExcelConnection.append( prgNo, kumi, laneNo, swmDB.get_name(swimmerID[laneNo]));
                                 }
                                 show_reason_and_set_occupied(laneNo, Convert.ToInt32(dr["事由入力ステータス"]));
                                 lastOccupiedLane = laneNo;
