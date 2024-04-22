@@ -216,7 +216,7 @@ namespace ResultSYS
             int buttomMargin = this.Height / 15; //53
             int leftMargin = this.Width / 80;     //15
             int rightMargin = this.Width / 100;     //12 
-            int laneNoWidth = this.Width / 20;   //60
+            int laneNoWidth = this.Width / 30;   //60
             int nameWidth = (this.Width - leftMargin - rightMargin - laneNoWidth) / 4; //220
 //            int relayNameWidth = nameWidth - 5;
 //            int shozokuWidth = nameWidth - 5;
@@ -229,14 +229,14 @@ namespace ResultSYS
             //int fontSizeKana = 12*Width/STDWIDTH;
             int timeWidth = 140 * this.Width / STDWIDTH;
             int fontSize4Rly = 16*Width/STDWIDTH;
-            int fontSizeShozoku = 21*Width/STDWIDTH;
+            int fontSizeShozoku = 23*Width/STDWIDTH;
             int fontsize4relayTeam = 24*Width/STDWIDTH;
             int fontsize4RaceName = 17 * Width / STDWIDTH;
             int fontSize = 30*this.Width/STDWIDTH; // was  30
             Font nameFont = new Font(fontName, fontSize); // was 23
-            int timeFontSize = 25 * this.Width / STDWIDTH;
+            int timeFontSize = 32 * this.Width / STDWIDTH;
             Font timeFont = new Font(fontName, timeFontSize); // was 23
-            int stimeFontSize = 24 * this.Width / STDWIDTH;
+            int stimeFontSize = 32 * this.Width / STDWIDTH;
             Font stimeFont = new Font(fontName, stimeFontSize); // was 23
             Font relayTeamFont = new Font(fontName, fontsize4relayTeam);
             Font shozokuFont = new Font(fontName, fontSizeShozoku);
@@ -258,7 +258,7 @@ namespace ResultSYS
                 int yposr = topMargin + (laneHeight * (laneNo - 1))+2;
                 int yposk = yposr + raceNameHeight;
                 int ypos = yposk + kanaHeight;
-                create_lblName("lblLane", laneNo, xpos, ypos, nameFont, "" + laneNo + ".");
+                create_lblName("lblLane", laneNo, xpos, ypos, nameFont, "" + laneNo );
                 create_lblName("lblRaceName", laneNo, xpos, yposr, raceNameFont, "");
                 create_lblName("lblGameRecord", laneNo, gameRecordPosX, yposr, raceNameFont, "");
                 xpos = xpos + laneNoWidth;
@@ -266,7 +266,7 @@ namespace ResultSYS
                 create_lblName("lblRealyTeamName", laneNo, xpos, ypos, relayTeamFont);
                 //create_lblName("lblKana", laneNo, xpos + 15, yposk, kanaFont, "");
                 xpos += nameWidth;
-                create_lblName("lblShozoku", laneNo, xpos, ypos + 3, shozokuFont, "");
+                create_lblName("lblShozoku", laneNo, xpos, ypos - 3, shozokuFont, "");
                 int xpos4relay = xpos - 8; ////------
                 xpos += nameWidth;
                 xpos += fontSize * 2;
@@ -423,6 +423,7 @@ namespace ResultSYS
             this.Text = evtDB.get_eventName() + " " + evtDB.get_eventDate() + " " + evtDB.get_eventVenue();
             //            MessageBox.Show(" width: " + Width + "   Height: " + Height);
             // in my surface   width=1196 height=791
+            init_lap_counter(); //--
 
             layout_header_label();
             layout_label();
